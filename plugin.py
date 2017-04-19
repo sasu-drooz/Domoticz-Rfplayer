@@ -27,12 +27,6 @@
 				<option label="Disable" value="False"  default="true" />
 			</options>
 		</param>
-		<param field="Mode5" label="Fake Test" width="75px">
-			<options>
-				<option label="True" value="True"/>
-				<option label="False" value="False"  default="true" />
-			</options>
-		</param>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="True" value="Debug"/>
@@ -138,8 +132,6 @@ class BasePlugin:
 		return
 
 	def onHeartbeat(self):
-		if Parameters["Mode5"] == "True":
-			faketest()
 		return True
 
 	def SetSocketSettings(self, power):
@@ -989,31 +981,3 @@ def writetofile(ReqRcv):
 	with open(Parameters["HomeFolder"]+"Response.txt", "at") as text_file:
 		print(ReqRcv, file=text_file)
 	return
-
-	
-def faketest():
-	### type 1
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "0", "rfLevel": "-41", "floorNoise": "-97", "rfQuality": "10", "protocol": "3", "protocolMeaning": "BLYSS", "infoType": "1", "frequency": "433920"},"infos": {"subType": "0", "id": "4261483730", "subTypeMeaning": "OFF"}}'
-	ReadData(ReqRcv)
-	
-	### type 2
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "1", "rfLevel": "-50", "floorNoise": "-107", "rfQuality": "10", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "868950"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1166992416", "qualifier": "8", "qualifierMeaning": { "flags": ["Supervisor/Alive"]}}}} '
-	ReadData(ReqRcv)
-	### type 2
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "1", "rfLevel": "-52", "floorNoise": "-107", "rfQuality": "10", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "868950"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1166992416", "qualifier": "1", "qualifierMeaning": { "flags": ["Tamper"]}}}} '
-	ReadData(ReqRcv)
-	### type 4
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-64", "floorNoise": "-106", "rfQuality": "10", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "4", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x1A2D", "id_PHYMeaning": "THGR122/228/238/268,THGN122/123/132", "adr_channel": "47874",  "adr": "187",  "channel": "2",  "qualifier": "33",  "lowBatt": "1", "measures" : [{"type" : "temperature", "value" : "+11.2", "unit" : "Celsius"}, {"type" : "hygrometry", "value" : "52", "unit" : "%"}]}}}'
-	ReadData(ReqRcv)
-	### type 9
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "0", "rfLevel": "-71", "floorNoise": "-98", "rfQuality": "5", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "9", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x2A19", "id_PHYMeaning": "PCR800", "adr_channel": "39168",  "adr": "153",  "channel": "0",  "qualifier": "48",  "lowBatt": "0", "measures" : [{"type" : "total rain", "value" : "1040.1", "unit" : "mm"}, {"type" : "current rain", "value" : "12.3", "unit" : "mm/h"}]}}} '
-	ReadData(ReqRcv)
-	### type 6
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "0", "rfLevel": "-64", "floorNoise": "-97", "rfQuality": "6", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "6", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x1A89", "id_PHYMeaning": "WGR800", "adr_channel": "40192",  "adr": "157",  "channel": "0",  "qualifier": "48",  "lowBatt": "0", "measures" : [{"type" : "wind speed", "value" : "5", "unit" : "m/s"}, {"type" : "direction", "value" : "135", "unit" : "degree"}]}}} '
-	ReadData(ReqRcv)
-	### type 8
-	ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "dataFlag": "0", "rfLevel": "-41", "floorNoise": "-97", "rfQuality": "10", "protocol": "7", "protocolMeaning": "OWL", "infoType": "8", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x0003", "id_PHYMeaning": "CM180i", "adr_channel": "784",  "adr": "49",  "channel": "0",  "qualifier": "6",  "lowBatt": "0", "measures" : [{"type" : "energy", "value" : "47890", "unit" : "Wh"}, {"type" : "power", "value" : "385", "unit" : "W"}, {"type" : "P1", "value" : "325", "unit" : "W"}, {"type" : "P2", "value" : "100", "unit" : "W"}, {"type" : "P3","value" : "190", "unit" : "W"}]}}} '
-	ReadData(ReqRcv)
-	### type 7
-	ReqRcv='ZIA33{"frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-84", "floorNoise": "-113", "rfQuality": "2","protocol": "5", "protocolMeaning": "OREGON", "infoType": "7", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0xDA78", "id_PHYMeaning": "UVN800","adr_channel": "2054",  "adr": "8",  "channel": "6",  "qualifier": "17","lowBatt": "0","measures" : [{"type" : "UV", "value" : "5", "unit" : "1/10 index"}]}}}'
-	ReadData(ReqRcv)
