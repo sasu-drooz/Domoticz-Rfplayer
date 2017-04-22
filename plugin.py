@@ -27,6 +27,52 @@
 				<option label="Disable" value="False"  default="true" />
 			</options>
 		</param>
+		<param field="Mode5" label="Create devices for Parrot entry (A1, A2 ...)" width="75px">
+			<options>
+				<option label="True" value="Debug"/>
+				<option label="False" value="Normal"  default="true" />
+			</options>
+		</param>
+				<param field="Mode2" label="Choose Letter for Parrot entry :" width="75px">
+			<options>
+				<option label="A" value="A"/>
+				<option label="B" value="B"/>
+				<option label="C" value="C"/>
+				<option label="D" value="D"/>
+				<option label="E" value="E"/>
+				<option label="F" value="F"/>
+				<option label="G" value="G"/>
+				<option label="H" value="H"/>
+				<option label="I" value="I"/>
+				<option label="J" value="J"/>
+				<option label="K" value="K"/>
+				<option label="L" value="L"/>
+				<option label="M" value="M"/>
+				<option label="N" value="N"/>
+				<option label="O" value="O"/>
+				<option label="P" value="P"/>
+			</options>
+		</param>
+				<param field="Mode3" label="Choose Number for Parrot entry :" width="75px">
+			<options>
+				<option label="1" value="1"/>
+				<option label="2" value="2"/>
+				<option label="3" value="3"/>
+				<option label="4" value="4"/>
+				<option label="5" value="5"/>
+				<option label="6" value="6"/>
+				<option label="7" value="7"/>
+				<option label="8" value="8"/>
+				<option label="9" value="9"/>
+				<option label="10" value="10"/>
+				<option label="11" value="11"/>
+				<option label="12" value="12"/>
+				<option label="13" value="13"/>
+				<option label="14" value="14"/>
+				<option label="15" value="15"/>
+				<option label="16" value="16"/>
+			</options>
+		</param>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="True" value="Debug"/>
@@ -72,7 +118,24 @@ class BasePlugin:
 	#					"SelectorStyle": "1"}
 	#		Domoticz.Device(Name="Add Light/Switch X10 form",  Unit=2, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 	#		Domoticz.Log("Devices created.")
-	#	Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
+		if Parameters["Mode5"] == "True":
+			Options = {"infoType":"0", "id": Parameters["Mode2"]+Parameters["Mode3"] , "protocol": "11"}
+			Domoticz.Debug("Options to find or set : " + str(Options))
+			#########check if devices exist ####################
+			for x in Devices:
+				if Devices[x].Options == Options :
+					IsCreated = True
+					Domoticz.Log("Devices already exist. Unit=" + str(x))
+					Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+					nbrdevices=x
+				if IsCreated == False :
+					nbrdevices=x
+			########### create device if not find ###############
+			if IsCreated == False and Parameters["Mode4"] == "True" :
+				nbrdevices=nbrdevices+1
+				Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
+				Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType),Options = Options)
+			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
 		DumpConfigToLog()
 		Domoticz.Transport("Serial", Parameters["SerialPort"], Baud=115200)
 		Domoticz.Protocol("None")  # None,XML,JSON,HTTP
