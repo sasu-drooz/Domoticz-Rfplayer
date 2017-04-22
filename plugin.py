@@ -33,7 +33,7 @@
 				<option label="False" value="False"  default="true" />
 			</options>
 		</param>
-				<param field="Mode2" label="Choose Letter for Parrot entry :" width="75px">
+				<param field="Mode2" label="Choose Letter for Parrot entry" width="75px">
 			<options>
 				<option label="A" value="A"/>
 				<option label="B" value="B"/>
@@ -53,7 +53,7 @@
 				<option label="P" value="P"/>
 			</options>
 		</param>
-				<param field="Mode3" label="Choose Number for Parrot entry :" width="75px">
+				<param field="Mode3" label="Choose Number for Parrot entry" width="75px">
 			<options>
 				<option label="1" value="1"/>
 				<option label="2" value="2"/>
