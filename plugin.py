@@ -1037,7 +1037,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 
 	if infoType == "0" :
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
@@ -1046,7 +1046,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	
 	if infoType == "1" :
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id + ""
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
