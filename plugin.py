@@ -29,11 +29,11 @@
 		</param>
 		<param field="Mode5" label="Create devices for Parrot entry (A1, A2 ...)" width="75px">
 			<options>
-				<option label="True" value="Debug"/>
-				<option label="False" value="Normal"  default="true" />
+				<option label="True" value="True"/>
+				<option label="False" value="False"  default="true" />
 			</options>
 		</param>
-				<param field="Mode2" label="Choose Letter for Parrot entry :" width="75px">
+				<param field="Mode2" label="Choose Letter for Parrot entry" width="75px">
 			<options>
 				<option label="A" value="A"/>
 				<option label="B" value="B"/>
@@ -53,7 +53,7 @@
 				<option label="P" value="P"/>
 			</options>
 		</param>
-				<param field="Mode3" label="Choose Number for Parrot entry :" width="75px">
+				<param field="Mode3" label="Choose Number for Parrot entry" width="75px">
 			<options>
 				<option label="1" value="1"/>
 				<option label="2" value="2"/>
@@ -119,6 +119,9 @@ class BasePlugin:
 	#		Domoticz.Device(Name="Add Light/Switch X10 form",  Unit=2, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 	#		Domoticz.Log("Devices created.")
 		if Parameters["Mode5"] == "True":
+			IsCreated=False
+			x=0
+			nbrdevices=1
 			Options = {"infoType":"0", "id": Parameters["Mode2"]+Parameters["Mode3"] , "protocol": "11"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			#########check if devices exist ####################
@@ -133,8 +136,8 @@ class BasePlugin:
 			########### create device if not find ###############
 			if IsCreated == False and Parameters["Mode4"] == "True" :
 				nbrdevices=nbrdevices+1
-				Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
-				Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType),Options = Options)
+				Domoticz.Device(Name="Parrot - " + Parameters["Mode2"]+Parameters["Mode3"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
+				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
 		DumpConfigToLog()
 		Domoticz.Transport("Serial", Parameters["SerialPort"], Baud=115200)
@@ -1034,7 +1037,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 
 	if infoType == "0" :
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
@@ -1043,7 +1046,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	
 	if infoType == "1" :
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id + ""
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
