@@ -991,22 +991,22 @@ def ReadData(ReqRcv):
 
 			Domoticz.Debug("id_PHY : " + id_PHY + " adr_channel : " + adr_channel)
 			
-	#		Options = {"infoType":infoType, "id_PHY": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "Temp" : "1"}
-	#		Domoticz.Debug("Options to find or set : " + str(Options))
-	#		for x in Devices:
-	#			if Devices[x].Options == Options:
-	#				IsCreated = True
-	#				Domoticz.Log("Devices already exist. Unit=" + str(x))
-	#				Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-	#				nbrdevices=x
-	#			if IsCreated == False :
-	#				nbrdevices=x
-	#		if IsCreated == False and Parameters["Mode4"] == "True":
-	#			nbrdevices=nbrdevices+1
-	#			Domoticz.Device(Name="Temp - " + adr_channel, Unit=nbrdevices, Type=80, Switchtype=0).Create()
-	#			Devices[nbrdevices].Update(nValue = 0,sValue = str(temp),Options = Options)
-	#		elif IsCreated == True :
-	#			Devices[nbrdevices].Update(nValue = 0,sValue = str(temp))
+			Options = {"infoType":infoType, "id_PHY": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "Temp" : "1"}
+			Domoticz.Debug("Options to find or set : " + str(Options))
+			for x in Devices:
+				if Devices[x].Options == Options:
+					IsCreated = True
+					Domoticz.Log("Devices already exist. Unit=" + str(x))
+					Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+					nbrdevices=x
+				if IsCreated == False :
+					nbrdevices=x
+			if IsCreated == False and Parameters["Mode4"] == "True":
+				nbrdevices=nbrdevices+1
+				Domoticz.Device(Name="Rain - " + adr_channel, Unit=nbrdevices, Type=85, Switchtype=0).Create()
+				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain),Options = Options)
+			elif IsCreated == True :
+				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain))
 		
 		
 		if Parameters["Mode6"] == "Debug":
