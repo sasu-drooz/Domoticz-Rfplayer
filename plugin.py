@@ -134,7 +134,7 @@ class BasePlugin:
 				if IsCreated == False :
 					nbrdevices=x
 			########### create device if not find ###############
-			if IsCreated == False and Parameters["Mode4"] == "True" :
+			if IsCreated == False :
 				nbrdevices=nbrdevices+1
 				Domoticz.Device(Name="Parrot - " + Parameters["Mode2"]+Parameters["Mode3"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
