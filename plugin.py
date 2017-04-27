@@ -1007,7 +1007,75 @@ def ReadData(ReqRcv):
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain),Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain))
-		
+		##############################################################################################################
+		#####################################Frame infoType 11		 Alarm X2D protocol / Shutter ####################
+		##############################################################################################################
+		if infoType == "11":
+			protocol = DecData['frame']['header']['protocol']
+			SubType = DecData['frame']['infos']['subType']
+			##############################################################################################################
+			if SubType == "0" : # Detector/sensor
+				id = DecData['frame']['infos']['id']
+				qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
+				Tamper=qualifier[0]
+				Alarm=qualifier[1]
+				Battery=qualifier[2]
+				if Tamper=="0" and Alarm=="0" :
+					status=0
+				if Tamper=="1" and Alarm=="0" :
+					status=10
+				if Tamper=="0" and Alarm=="1" :
+					status=20
+				if Tamper=="1" and Alarm=="1" :
+					status=30
+				if Battery=="0" :
+					Battery=100
+				else :
+					Battery=5
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Domoticz.Debug("Options to find or set : " + str(Options))
+				for x in Devices:
+					if Devices[x].Options == Options :
+						IsCreated = True
+						Domoticz.Log("Devices already exist. Unit=" + str(x))
+						Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+						nbrdevices=x
+					if IsCreated == False :
+						nbrdevices=x
+				if IsCreated == False and Parameters["Mode4"] == "True":
+					nbrdevices=nbrdevices+1
+					#Options = {"LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
+				elif IsCreated == True :
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
+			##############################################################################################################
+			elif SubType == "1":  # remote
+				id = DecData['frame']['infos']['id']
+				qualifier = DecData['frame']['infos']['qualifier']
+				if qualifier=="1" :
+					status=10
+				if qualifier=="2" :
+					status=0
+				if qualifier=="3" :
+					status=20
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Domoticz.Debug("Options to find or set : " + str(Options))
+				for x in Devices:
+					if Devices[x].Options == Options :
+						IsCreated = True
+						Domoticz.Log("Devices already exist. Unit=" + str(x))
+						Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+						nbrdevices=x
+					if IsCreated == False :
+						nbrdevices=x
+				if IsCreated == False and Parameters["Mode4"] == "True":
+					nbrdevices=nbrdevices+1
+					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
+				elif IsCreated == True :
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status))
+
 		
 		if Parameters["Mode6"] == "Debug":
 			writetofile(ReqRcv)
