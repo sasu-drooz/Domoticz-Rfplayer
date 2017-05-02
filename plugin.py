@@ -6,7 +6,7 @@
 #################################################################################################
 #
 #TODO :
-#  - infotype 9 , 10 et 11
+#  - infotype 10
 #  - gestion des erreurs d absences de tag json
 #  - gestion des type DIM pour les suptype 0 et 1
 #  - verification des type et subtype des devices utilisés
@@ -20,7 +20,7 @@
 <plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.0" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
 	<params>
 		<param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
-		<param field="Mode1" label="Mac Address" width="200px" required="true" default="123456765"/>
+		<param field="Mode1" label="Mac Address" width="200px"/>
 		<param field="Mode4" label="Enable Learning Mode" width="75px">
 			<options>
 				<option label="Enable" value="True"/>
@@ -280,8 +280,9 @@ def RFpConf():
 	Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 	lineinput='ZIA++FORMAT JSON'
 	Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
-	lineinput='ZIA++SETMAC ' + Parameters["Mode1"]
-	Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+	if Parameters["Mode1"] != "" :
+		lineinput='ZIA++SETMAC ' + Parameters["Mode1"]
+		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 	return
 	
 def ReadConf(ReqRcv):
@@ -1007,6 +1008,73 @@ def ReadData(ReqRcv):
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain),Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain))
+
+		##############################################################################################################
+		#####################################Frame infoType 10		  Thermostats  X2D protocol ######################
+		##############################################################################################################
+		if infoType == "10":
+			protocol = DecData['frame']['header']['protocol']
+			SubType = DecData['frame']['infos']['subType']
+			id = DecData['frame']['infos']['id']
+			area = DecData['frame']['infos']['area']
+			function = DecData['frame']['infos']['function']
+			state = DecData['frame']['infos']['state']
+			
+			
+			if function == "2" :
+				if state == "0": #ECO 
+					status = 10
+				if state == "1": #MODERAT 
+					status = 20
+				if state == "2": #MEDIO
+					status = 30
+				if state == "3": #COMFORT 
+					status = 40
+				if state == "4": #STOP 
+					status = 50
+				if state == "5": #OUT OF FROST 
+					status = 60
+				if state == "6": #SPECIAL 
+					status = 70
+				if state == "7": #AUTO 
+					status = 80
+				if state == "8": #CENTRALISED
+					status = 90
+				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				Domoticz.Debug("Options to find or set : " + str(Options))
+				for x in Devices:
+					if Devices[x].Options == Options :
+						IsCreated = True
+						Domoticz.Log("Devices already exist. Unit=" + str(x))
+						Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+						nbrdevices=x
+					if IsCreated == False :
+						nbrdevices=x
+				if IsCreated == False and Parameters["Mode4"] == "True":
+					nbrdevices=nbrdevices+1
+					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
+				elif IsCreated == True :
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status))
+		##############################################################################################################
+			else :
+				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType)}
+				Domoticz.Debug("Options to find or set : " + str(Options))
+				for x in Devices:
+					if Devices[x].Options == Options :
+						IsCreated = True
+						Domoticz.Log("Devices already exist. Unit=" + str(x))
+						Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+						nbrdevices=x
+					if IsCreated == False :
+						nbrdevices=x
+				if IsCreated == False and Parameters["Mode4"] == "True":
+					nbrdevices=nbrdevices+1
+					Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
+					Devices[nbrdevices].Update(nValue =0,sValue = str(state), Options = Options)
+				elif IsCreated == True :
+					Devices[nbrdevices].Update(nValue =0,sValue = str(state))
+
 		##############################################################################################################
 		#####################################Frame infoType 11		 Alarm X2D protocol / Shutter ####################
 		##############################################################################################################
