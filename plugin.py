@@ -6,7 +6,7 @@
 #################################################################################################
 #
 #TODO :
-#  - infotype 10
+#  - Finir emission X2D et RTS (dim level)
 #  - gestion des erreurs d absences de tag json
 #  - gestion des type DIM pour les suptype 0 et 1
 #  - verification des type et subtype des devices utilisés
@@ -27,52 +27,31 @@
 				<option label="Disable" value="False"  default="true" />
 			</options>
 		</param>
-		<param field="Mode5" label="Create devices for Parrot entry (A1, A2 ...)" width="75px">
+		<param field="Mode5" label="Manual Create devices" width="75px">
 			<options>
-				<option label="True" value="True"/>
 				<option label="False" value="False"  default="true" />
+				<option label="VISONIC - 433" value="1"/>
+				<option label="VISONIC - 868" value="2"/>
+				<option label="CHACON" value="3"/>
+				<option label="DOMIA" value="4"/>
+				<option label="X10" value="5"/>
+				<option label="X2D - 433 - OPERATING_MODE" value="6"/>
+				<option label="X2D - 433 - HEATING_SPEED" value="61"/>
+				<option label="X2D - 433 - REGULATION" value="62"/>
+				<option label="X2D - 433 - THERMIC_AREA_STATE" value="63"/>
+				<option label="X2D - 868 - OPERATING_MODE" value="7"/>
+				<option label="X2D - 868 - HEATING_SPEED" value="71"/>
+				<option label="X2D - 868 - REGULATION" value="72"/>
+				<option label="X2D - 868 - THERMIC_AREA_STATE" value="73"/>
+				<option label="X2D - SHUTTER" value="8"/>
+				<option label="RTS - SHUTTER" value="11"/>
+				<option label="RTS - PORTAL" value="14"/>
+				<option label="BLYSS" value="12"/>
+				<option label="PARROT" value="13"/>
+				<option label="KD101" value="16"/>
 			</options>
 		</param>
-				<param field="Mode2" label="Choose Letter for Parrot entry" width="75px">
-			<options>
-				<option label="A" value="A"/>
-				<option label="B" value="B"/>
-				<option label="C" value="C"/>
-				<option label="D" value="D"/>
-				<option label="E" value="E"/>
-				<option label="F" value="F"/>
-				<option label="G" value="G"/>
-				<option label="H" value="H"/>
-				<option label="I" value="I"/>
-				<option label="J" value="J"/>
-				<option label="K" value="K"/>
-				<option label="L" value="L"/>
-				<option label="M" value="M"/>
-				<option label="N" value="N"/>
-				<option label="O" value="O"/>
-				<option label="P" value="P"/>
-			</options>
-		</param>
-				<param field="Mode3" label="Choose Number for Parrot entry" width="75px">
-			<options>
-				<option label="1" value="1"/>
-				<option label="2" value="2"/>
-				<option label="3" value="3"/>
-				<option label="4" value="4"/>
-				<option label="5" value="5"/>
-				<option label="6" value="6"/>
-				<option label="7" value="7"/>
-				<option label="8" value="8"/>
-				<option label="9" value="9"/>
-				<option label="10" value="10"/>
-				<option label="11" value="11"/>
-				<option label="12" value="12"/>
-				<option label="13" value="13"/>
-				<option label="14" value="14"/>
-				<option label="15" value="15"/>
-				<option label="16" value="16"/>
-			</options>
-		</param>
+		<param field="Mode2" label="devices ID" width="200px"/>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="True" value="Debug"/>
@@ -106,23 +85,64 @@ class BasePlugin:
 			#Domoticz.Log("Debugger started, use 'telnet 0.0.0.0 4444' to connect")
 			#import rpdb
 			#rpdb.set_trace()
-	#	if (len(Devices) == 0):
-	#		Options = {"LevelActions": "||||||||||||||",
-	#					"LevelNames": "Off|VISIONIC433|VISIONIC866|CHACON|DOMIA|X10|X2DSHUTTER|X2DELELC|X2DGAS|RTS|BLYSS|PARROT|KD101",
-	#					"LevelOffHidden": "True",
-	#					"SelectorStyle": "1"}
-	#		Domoticz.Device(Name="Add Light/Switch A-P 1-16 form",  Unit=1, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
-	#		Options = {"LevelActions": "||||||||||||||",
-	#					"LevelNames": "Off|VISIONIC433|VISIONIC866|CHACON|DOMIA|X10|X2DSHUTTER|X2DELELC|X2DGAS|RTS|BLYSS|PARROT|KD101",
-	#					"LevelOffHidden": "True",
-	#					"SelectorStyle": "1"}
-	#		Domoticz.Device(Name="Add Light/Switch X10 form",  Unit=2, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
-	#		Domoticz.Log("Devices created.")
-		if Parameters["Mode5"] == "True":
+		if Parameters["Mode5"] != "False":
+			if Parameters["Mode5"] =="1": protocol="2" #visonic433
+			if Parameters["Mode5"] =="2": protocol="2" #visonic868
+			if Parameters["Mode5"] =="3": protocol="4" #chacon
+			if Parameters["Mode5"] =="4": protocol="6" #domia
+			if Parameters["Mode5"] =="5": protocol="1" #X10
+			if Parameters["Mode5"] =="6" or Parameters["Mode5"] =="61" or Parameters["Mode5"] =="62" or Parameters["Mode5"] =="63": protocol="8" #X2D433
+			if Parameters["Mode5"] =="7" or Parameters["Mode5"] =="71" or Parameters["Mode5"] =="72" or Parameters["Mode5"] =="73": protocol="8" #X2D868
+			if Parameters["Mode5"] =="8": protocol="8" #X2DSHUTTER
+			if Parameters["Mode5"] =="11" or Parameters["Mode5"] =="14": protocol="9" #RTS
+			if Parameters["Mode5"] =="12": protocol="3" #BLYSS
+			if Parameters["Mode5"] =="13": protocol="11" #PARROT
+			if Parameters["Mode5"] =="16": protocol="10" #KD101
+			id = Parameters["Mode2"]
+			if Parameters["Mode5"] == "4" or Parameters["Mode5"] == "5" or Parameters["Mode5"] == "13" :
+				infoType="0"
+			if Parameters["Mode5"] == "3" or Parameters["Mode5"] == "12" or Parameters["Mode5"] == "16" :
+				infoType="1"
+			if Parameters["Mode5"] == "1" or Parameters["Mode5"] == "2" :
+				infoType="2"
+			if Parameters["Mode5"] == "11" or Parameters["Mode5"] == "14" :
+				infoType="3"
+			if Parameters["Mode5"] == "6" or Parameters["Mode5"] == "61" or Parameters["Mode5"] == "62" or Parameters["Mode5"] == "63" or Parameters["Mode5"] == "7" or Parameters["Mode5"] == "71" or Parameters["Mode5"] == "72" or Parameters["Mode5"] == "73" :
+				infoType="10"
+			if Parameters["Mode5"] == "8":
+				infoType="11"
+			if infoType == "0" or infoType == "1" :
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol)}
+			if infoType == "2" and Parameters["Mode5"] =="1":
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency":"433920"}
+			if infoType == "2" and Parameters["Mode5"] =="2":
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency":"868950"}
+			if infoType == "3" and Parameters["Mode5"] =="11":
+				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "0", "LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			if infoType == "3" and Parameters["Mode5"] =="14":
+				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			if infoType == "10" and Parameters["Mode5"] =="6":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+			if infoType == "10" and Parameters["Mode5"] =="61":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+			if infoType == "10" and Parameters["Mode5"] =="62":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+			if infoType == "10" and Parameters["Mode5"] =="63":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+			if infoType == "10" and Parameters["Mode5"] =="7":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+			if infoType == "10" and Parameters["Mode5"] =="71":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+			if infoType == "10" and Parameters["Mode5"] =="72":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+			if infoType == "10" and Parameters["Mode5"] =="73":
+				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+			if infoType == "11" :
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
+						
 			IsCreated=False
 			x=0
 			nbrdevices=1
-			Options = {"infoType":"0", "id": Parameters["Mode2"]+Parameters["Mode3"] , "protocol": "11"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			#########check if devices exist ####################
 			for x in Devices:
@@ -136,7 +156,7 @@ class BasePlugin:
 			########### create device if not find ###############
 			if IsCreated == False :
 				nbrdevices=nbrdevices+1
-				Domoticz.Device(Name="Parrot - " + Parameters["Mode2"]+Parameters["Mode3"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
+				Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
 		DumpConfigToLog()
@@ -382,6 +402,7 @@ def ReadData(ReqRcv):
 		##############################################################################################################
 		if infoType == "2":
 			protocol = DecData['frame']['header']['protocol']
+			frequency = DecData['frame']['header']['frequency']
 			SubType = DecData['frame']['infos']['subType']
 			id_lsb = DecData['frame']['infos']['id_lsb']
 			id_msb = DecData['frame']['infos']['id_msb']
@@ -429,7 +450,7 @@ def ReadData(ReqRcv):
 				button2=qualifier[5]
 				button3=qualifier[6]
 				button4=qualifier[7]
-				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "button": "1"}
+				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "button": "1"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -447,7 +468,7 @@ def ReadData(ReqRcv):
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
 				###########################################################################################################################
 				IsCreated=False
-				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "button": "2"}
+				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "button": "2"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -465,7 +486,7 @@ def ReadData(ReqRcv):
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
 				############################################################################################################################
 				IsCreated=False
-				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "button": "3"}
+				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "button": "3"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -483,7 +504,7 @@ def ReadData(ReqRcv):
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
 				###################################################################################################################################
 				IsCreated=False
-				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "button": "4"}
+				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "button": "4"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -1014,6 +1035,7 @@ def ReadData(ReqRcv):
 		##############################################################################################################
 		if infoType == "10":
 			protocol = DecData['frame']['header']['protocol']
+			frequency = DecData['frame']['header']['frequency']
 			SubType = DecData['frame']['infos']['subType']
 			id = DecData['frame']['infos']['id']
 			area = DecData['frame']['infos']['area']
@@ -1040,7 +1062,7 @@ def ReadData(ReqRcv):
 					status = 80
 				if state == "8": #CENTRALISED
 					status = 90
-				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -1058,7 +1080,7 @@ def ReadData(ReqRcv):
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status))
 		##############################################################################################################
 			else :
-				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType)}
+				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
@@ -1160,18 +1182,28 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	infoType = Options['infoType']
 	protocol=Options['protocol']
 	if protocol =="1": protocol="X10"
-	if protocol =="2": protocol="VISIONIC"
+	if protocol =="2": 
+		frequency=Options['frequency']
+		if frequency == "433920":
+			protocol="VISIONIC433"
+		if frequency == "868950":
+			protocol="VISIONIC868"
 	if protocol =="3": protocol="BLYSS"
 	if protocol =="4": protocol="CHACON"
-	if protocol =="5": protocol="OREGON"
 	if protocol =="6": protocol="DOMIA"
-	if protocol =="7": protocol="OWL"
-	if protocol =="8": protocol="X2D"
+	if protocol =="8" and infoType == "10":
+		frequency=Options['frequency']
+		if frequency == "433920":
+			protocol="X2D433"
+		if frequency == "868950":
+			protocol="X2D868"
+	if protocol =="8" and infoType == "11":
+		protocol="X2DSHUTTER"
 	if protocol =="9": protocol="RTS"
 	if protocol =="10": protocol="KD101"
 	if protocol =="11": protocol="PARROT"
 
-	if infoType == "0" :
+	if infoType == "0" or infoType == "1" or infoType == "2":
 		id=Options['id']
 		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
@@ -1180,15 +1212,64 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		if Command == "Off":
 			Devices[Unit].Update(nValue =0,sValue = "off")
 	
-	if infoType == "1" :
+	if infoType == "3" :
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
+		qualifier=Options['subType']
+		if qualifier=="0":
+			if Level == 0 :
+				lineinput='ZIA++' + str("DIM %1 " + protocol + " " + id + " QUALIFIER " + qualifier)
+			if Level == 10 :
+				lineinput='ZIA++' + str("DIM %4 " + protocol + " " + id + " QUALIFIER " + qualifier)
+			if Level == 20 :
+				lineinput='ZIA++' + str("DIM %2 " + protocol + " " + id + " QUALIFIER " + qualifier)
+			if Level == 30 :
+				lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
+		if qualifier=="1":
+			if Level == 10 :
+				lineinput='ZIA++' + str("ON " + protocol + " " + id + " QUALIFIER " + qualifier)
+			if Level == 20 :
+				lineinput='ZIA++' + str("OFF " + protocol + " " + id + " QUALIFIER " + qualifier)
+			if Level == 30 :
+				lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
-		if Command == "On":
-			Devices[Unit].Update(nValue =1,sValue = "on")
-		if Command == "Off":
-			Devices[Unit].Update(nValue =0,sValue = "off")
-	
+		Devices[Unit].Update(nValue =0,sValue = str(Level))
+		
+	if infoType == "10" :
+		id=Options['id']
+		if Level == 0 :
+			lineinput='ZIA++' + str("DIM %0 " + protocol + " " + id)
+		if Level == 10 :
+			lineinput='ZIA++' + str("DIM %1 " + protocol + " " + id)
+		if Level == 20 :
+			lineinput='ZIA++' + str("DIM %2 " + protocol + " " + id)
+		if Level == 30 :
+			lineinput='ZIA++' + str("DIM %3 " + protocol + " " + id)
+		if Level == 40 :
+			lineinput='ZIA++' + str("DIM %4 " + protocol + " " + id)
+		if Level == 50 :
+			lineinput='ZIA++' + str("DIM %5 " + protocol + " " + id)
+		if Level == 60 :
+			lineinput='ZIA++' + str("DIM %6 " + protocol + " " + id)
+		if Level == 70 :
+			lineinput='ZIA++' + str("DIM %7 " + protocol + " " + id)
+		if Level == 80 :
+			lineinput='ZIA++' + str("DIM %8 " + protocol + " " + id)
+		if Level == 90 :
+			lineinput='ZIA++' + str("DIM %9 " + protocol + " " + id)
+		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		Devices[Unit].Update(nValue =0,sValue = str(Level))
+
+	if infoType == "11" :
+		id=Options['id']
+		if Level == 10 :
+			lineinput='ZIA++' + str("ON " + protocol + " " + id + " QUALIFIER " + qualifier)
+		if Level == 20 :
+			lineinput='ZIA++' + str("OFF " + protocol + " " + id + " QUALIFIER " + qualifier)
+		if Level == 30 :
+			lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
+		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		Devices[Unit].Update(nValue =0,sValue = str(Level))
+				
 	return
 
 def writetofile(ReqRcv):
