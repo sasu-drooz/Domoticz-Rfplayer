@@ -156,7 +156,7 @@ class BasePlugin:
 			########### create device if not find ###############
 			if IsCreated == False :
 				nbrdevices=nbrdevices+1
-				Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"]+Parameters["Mode3"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
+				Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
 		DumpConfigToLog()
