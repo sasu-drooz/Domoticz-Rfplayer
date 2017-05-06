@@ -1205,7 +1205,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 
 	if infoType == "0" or infoType == "1" or infoType == "2":
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
@@ -1217,56 +1217,56 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		qualifier=Options['subType']
 		if qualifier=="0":
 			if Level == 0 :
-				lineinput='ZIA++' + str("DIM %1 " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("DIM %1 " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 10 :
-				lineinput='ZIA++' + str("DIM %4 " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("DIM %4 " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 20 :
-				lineinput='ZIA++' + str("DIM %2 " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("DIM %2 " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 30 :
-				lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		if qualifier=="1":
 			if Level == 10 :
-				lineinput='ZIA++' + str("ON " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("ON " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 20 :
-				lineinput='ZIA++' + str("OFF " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("OFF " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 30 :
-				lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
+				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 		
 	if infoType == "10" :
 		id=Options['id']
 		if Level == 0 :
-			lineinput='ZIA++' + str("DIM %0 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %0 " + protocol + " ID " + id)
 		if Level == 10 :
-			lineinput='ZIA++' + str("DIM %1 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %1 " + protocol + " ID " + id)
 		if Level == 20 :
-			lineinput='ZIA++' + str("DIM %2 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %2 " + protocol + " ID " + id)
 		if Level == 30 :
-			lineinput='ZIA++' + str("DIM %3 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %3 " + protocol + " ID " + id)
 		if Level == 40 :
-			lineinput='ZIA++' + str("DIM %4 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %4 " + protocol + " ID " + id)
 		if Level == 50 :
-			lineinput='ZIA++' + str("DIM %5 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %5 " + protocol + " ID " + id)
 		if Level == 60 :
-			lineinput='ZIA++' + str("DIM %6 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %6 " + protocol + " ID " + id)
 		if Level == 70 :
-			lineinput='ZIA++' + str("DIM %7 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %7 " + protocol + " ID " + id)
 		if Level == 80 :
-			lineinput='ZIA++' + str("DIM %8 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %8 " + protocol + " ID " + id)
 		if Level == 90 :
-			lineinput='ZIA++' + str("DIM %9 " + protocol + " " + id)
+			lineinput='ZIA++' + str("DIM %9 " + protocol + " ID " + id)
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
 	if infoType == "11" :
 		id=Options['id']
 		if Level == 10 :
-			lineinput='ZIA++' + str("ON " + protocol + " " + id + " QUALIFIER " + qualifier)
+			lineinput='ZIA++' + str("ON " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		if Level == 20 :
-			lineinput='ZIA++' + str("OFF " + protocol + " " + id + " QUALIFIER " + qualifier)
+			lineinput='ZIA++' + str("OFF " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		if Level == 30 :
-			lineinput='ZIA++' + str("ASSOC " + protocol + " " + id + " QUALIFIER " + qualifier)
+			lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
