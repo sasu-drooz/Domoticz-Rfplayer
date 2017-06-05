@@ -9,9 +9,9 @@
 #  - Finir emission X2D et RTS (dim level)
 #  - gestion des erreurs d absences de tag json
 #  - gestion des type DIM pour les suptype 0 et 1
-#  - verification des type et subtype des devices utilisés
+#  - verification des type et subtype des devices utilisés (en attente suite a future modification des appels aux devices)
 #  - verification des data inserer
-#  - ajout Mode configuration pour le mode transcoder (en attente de pouvoir avoir acces a une page de conf pour les plugins python)
+#  - ajout Mode configuration pour les modes transcoder\Parrot (en attente de pouvoir avoir acces a une page de conf pour les plugins python)
 #
 #################################################################################################
 #################################################################################################
@@ -52,6 +52,7 @@
 			</options>
 		</param>
 		<param field="Mode2" label="devices ID" width="200px"/>
+		<param field="Mode3" label="Area (For X2D)" width="200px"/>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="True" value="Debug"/>
@@ -99,6 +100,7 @@ class BasePlugin:
 			if Parameters["Mode5"] =="13": protocol="11" #PARROT
 			if Parameters["Mode5"] =="16": protocol="10" #KD101
 			id = Parameters["Mode2"]
+			Area = Parameters["Mode3"]
 			if Parameters["Mode5"] == "4" or Parameters["Mode5"] == "5" or Parameters["Mode5"] == "13" :
 				infoType="0"
 			if Parameters["Mode5"] == "3" or Parameters["Mode5"] == "12" or Parameters["Mode5"] == "16" :
@@ -122,21 +124,21 @@ class BasePlugin:
 			if infoType == "3" and Parameters["Mode5"] =="14":
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			if infoType == "10" and Parameters["Mode5"] =="6":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
 			if infoType == "10" and Parameters["Mode5"] =="61":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
 			if infoType == "10" and Parameters["Mode5"] =="62":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
 			if infoType == "10" and Parameters["Mode5"] =="63":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
 			if infoType == "10" and Parameters["Mode5"] =="7":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
 			if infoType == "10" and Parameters["Mode5"] =="71":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
 			if infoType == "10" and Parameters["Mode5"] =="72":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
 			if infoType == "10" and Parameters["Mode5"] =="73":
-				Options = {"infoType":infoType, "id": str(id), "area": "", "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
 			if infoType == "11" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
 						
@@ -1236,6 +1238,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		
 	if infoType == "10" :
 		id=Options['id']
+		#Area=Options['area']
 		if Level == 0 :
 			lineinput='ZIA++' + str("DIM %0 " + protocol + " ID " + id)
 		if Level == 10 :
