@@ -70,15 +70,16 @@ global ReqRcv
 
 
 class BasePlugin:
-
-	
+	enabled = False
+	SerialConn = None
 	lastHeartbeat = datetime.datetime.now()
-	
+
 	def __init__(self):
 		return
 
 	def onStart(self):
 		global ReqRcv
+		global SerialConn
 		if Parameters["Mode6"] == "Debug":
 			Domoticz.Debugging(1)
 			with open(Parameters["HomeFolder"]+"Response.txt", "wt") as text_file:
@@ -162,10 +163,12 @@ class BasePlugin:
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
 		DumpConfigToLog()
-		Domoticz.Transport("Serial", Parameters["SerialPort"], Baud=115200)
-		Domoticz.Protocol("None")  # None,XML,JSON,HTTP
-		Domoticz.Connect()
-		ReqRcv=''    
+		#Domoticz.Transport("Serial", Parameters["SerialPort"], Baud=115200)
+		#Domoticz.Protocol("None")  # None,XML,JSON,HTTP
+		#Domoticz.Connect()
+		SerialConn = Domoticz.Connection(Name="RfP1000", Transport="Serial", Protocol="None", Address=Parameters["SerialPort"], Baud=115200)
+		SerialConn.Connect()
+		ReqRcv=''
 		return
 	
 	# present de base 
@@ -174,7 +177,7 @@ class BasePlugin:
 		Domoticz.Log("Plugin is stopping.")
 
 	# present de base 
-	def onConnect(self, Status, Description):
+	def onConnect(self, Connection, Status, Description):
 		global isConnected
 		if (Status == 0):
 			isConnected = True
@@ -187,7 +190,7 @@ class BasePlugin:
 		return True
 
 	# present de base 
-	def onMessage(self, Data, Status, Extra):
+	def onMessage(self, Connection, Data, Status, Extra):
 		global Tmprcv
 		global ReqRcv
 		###########################################
@@ -218,12 +221,15 @@ class BasePlugin:
 		SendtoRfplayer(Unit, Command, Level, Hue)
 		return True
 
-	def onDisconnect(self):
+	def onDisconnect(self, Connection):
 		return
 
 	def onHeartbeat(self):
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-85", "floorNoise": "-97", "rfQuality": "3", "protocol": "7", "protocolMeaning": "OWL", "infoType": "8", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x0002", "id_PHYMeaning": "CM180", "adr_channel": "35216",  "adr": "2201",  "channel": "0",  "qualifier": "1",  "lowBatt": "1", "measures" : [{"type" : "energy", "value" : "871295", "unit" : "Wh"}, {"type" : "power", "value" : "499", "unit" : "W"}]}}}'
 		#ReadData(ReqRcv)
+		global SerialConn
+		if (SerialConn.Connected() != True):
+			SerialConn.Connect()
 		return True
 
 	def SetSocketSettings(self, power):
@@ -247,28 +253,31 @@ def onStop():
 	global _plugin
 	_plugin.onStop()
 
-def onConnect(Status, Description):
+def onConnect(Connection, Status, Description):
 	global _plugin
-	_plugin.onConnect(Status, Description)
+	_plugin.onConnect(Connection, Status, Description)
 
-def onMessage(Data, Status, Extra):
+def onMessage(Connection, Data, Status, Extra):
 	global _plugin
-	_plugin.onMessage(Data, Status, Extra)
+	_plugin.onMessage(Connection, Data, Status, Extra)
 
 def onCommand(Unit, Command, Level, Hue):
 	global _plugin
 	_plugin.onCommand(Unit, Command, Level, Hue)
 
-def onDisconnect():
+def onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile):
 	global _plugin
-	_plugin.onDisconnect()
+	_plugin.onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile)
+
+def onDisconnect(Connection):
+	global _plugin
+	_plugin.onDisconnect(Connection)
 
 def onHeartbeat():
 	global _plugin
 	_plugin.onHeartbeat()
 
-
-# Generic helper functions
+	# Generic helper functions
 def DumpConfigToLog():
 	for x in Parameters:
 		if Parameters[x] != "":
@@ -281,7 +290,7 @@ def DumpConfigToLog():
 		Domoticz.Debug("Device nValue:	" + str(Devices[x].nValue))
 		Domoticz.Debug("Device sValue:   '" + Devices[x].sValue + "'")
 		Domoticz.Debug("Device LastLevel: " + str(Devices[x].LastLevel))
-	return	
+	return
 
 def UpdateDevice(Unit, nValue, sValue, Image, SignalLevel, BatteryLevel):
 	# Make sure that the Domoticz device still exists (they can be deleted) before updating it 
@@ -299,12 +308,12 @@ def UpdateDevice(Unit, nValue, sValue, Image, SignalLevel, BatteryLevel):
 def RFpConf():
 	###################Configure Rfplayer ~##################
 	lineinput='ZIA++RECEIVER + *'
-	Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	lineinput='ZIA++FORMAT JSON'
-	Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	if Parameters["Mode1"] != "" :
 		lineinput='ZIA++SETMAC ' + Parameters["Mode1"]
-		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	return
 	
 def ReadConf(ReqRcv):
@@ -523,7 +532,7 @@ def ReadData(ReqRcv):
 				elif IsCreated == True :
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
 		##############################################################################################################
-		#####################################Frame infoType 3				RTS     ##################################
+		#####################################Frame infoType 3				RTS	 ##################################
 		##############################################################################################################
 		if infoType == "3":
 			protocol = DecData['frame']['header']['protocol']
@@ -1208,7 +1217,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if infoType == "0" or infoType == "1" or infoType == "2":
 		id=Options['id']
 		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
-		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
 		if Command == "Off":
@@ -1233,7 +1242,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 				lineinput='ZIA++' + str("OFF " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 			if Level == 30 :
 				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
-		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 		
 	if infoType == "10" :
@@ -1259,7 +1268,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			lineinput='ZIA++' + str("DIM %8 " + protocol + " ID " + id)
 		if Level == 90 :
 			lineinput='ZIA++' + str("DIM %9 " + protocol + " ID " + id)
-		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
 	if infoType == "11" :
@@ -1270,7 +1279,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			lineinput='ZIA++' + str("OFF " + protocol + " ID " + id + " QUALIFIER " + qualifier)
 		if Level == 30 :
 			lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
-		Domoticz.Send(bytes(lineinput + '\n\r','utf-8'))
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
 	return
