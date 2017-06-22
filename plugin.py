@@ -1060,9 +1060,9 @@ def ReadData(ReqRcv):
 			Domoticz.Debug("id binary : " + str(idb))
 			Unit=idb[-6:]
 			idd=idb[:-6]
-			Domoticz.Debug("Unit b: " + str(Unit))
+			Domoticz.Debug("area b: " + str(Unit))
 			Domoticz.Debug("id decode b: " + str(idd))
-			Domoticz.Debug("Unit i: " + str(int(Unit,2)+1))
+			Domoticz.Debug("area i: " + str(int(Unit,2)+1))
 			Domoticz.Debug("id decode i: " + str(int(idd,2)))
 			Domoticz.Debug("id decode h: " + str(hex(int(idd,2)))[2:])
 			#########################################################################################
