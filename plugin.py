@@ -1053,6 +1053,20 @@ def ReadData(ReqRcv):
 			function = DecData['frame']['infos']['function']
 			state = DecData['frame']['infos']['state']
 			
+			#########################################################################################
+			######################### calcul id_lsb and id_msb from id ##############################
+			#########################################################################################
+			idb= bin(int(id))[2:]
+			Domoticz.Debug("id binary : " + str(idb))
+			Unit=idb[-6:]
+			idd=idb[:-6]
+			Domoticz.Debug("Unit b: " + str(Unit))
+			Domoticz.Debug("id decode b: " + str(idd))
+			Domoticz.Debug("Unit i: " + str(int(Unit,2)+1))
+			Domoticz.Debug("id decode i: " + str(int(idd,2)))
+			Domoticz.Debug("id decode h: " + str(hex(int(idd,2)))[2:])
+			#########################################################################################
+			#########################################################################################
 			
 			if function == "2" :
 				if state == "0": #ECO 
@@ -1073,7 +1087,7 @@ def ReadData(ReqRcv):
 					status = 80
 				if state == "8": #CENTRALISED
 					status = 90
-				Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(idd), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
