@@ -17,7 +17,7 @@
 #################################################################################################
 #
 """
-<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.1" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
+<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.2" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
 	<params>
 		<param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
 		<param field="Mode1" label="Mac Address" width="200px"/>
@@ -418,9 +418,9 @@ def ReadData(ReqRcv):
 			if protocol == "2":
 				id_lsb = DecData['frame']['infos']['id_lsb']
 				id_msb = DecData['frame']['infos']['id_msb']
+				qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
 			elif protocol == "3" :
 				id = DecData['frame']['infos']['id']
-			qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
 			Domoticz.Debug("id_lsb : " + id_lsb + " id_msb : " + id_msb + " subType :" + SubType)
 			##############################################################################################################
 			if SubType == "0" and protocol == "2": # Detector/sensor visonic
