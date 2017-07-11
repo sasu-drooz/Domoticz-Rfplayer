@@ -458,7 +458,7 @@ def ReadData(ReqRcv):
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
 			##############################################################################################################
 			##############################################################################################################
-			if SubType == "0" and protocol == ""3 : # blyss 
+			if SubType == "0" and protocol == "3" : # blyss 
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType) }
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
