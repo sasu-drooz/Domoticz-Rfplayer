@@ -82,7 +82,7 @@ class BasePlugin:
 		global SerialConn
 		if Parameters["Mode6"] == "Debug":
 			Domoticz.Debugging(1)
-			with open(Parameters["HomeFolder"]+"Response.txt", "wt") as text_file:
+			with open(Parameters["HomeFolder"]+"Debug.txt", "wt") as text_file:
 				print("Started recording message for debug.", file=text_file)
 			#Domoticz.Log("Debugger started, use 'telnet 0.0.0.0 4444' to connect")
 			#import rpdb
@@ -415,12 +415,15 @@ def ReadData(ReqRcv):
 			protocol = DecData['frame']['header']['protocol']
 			frequency = DecData['frame']['header']['frequency']
 			SubType = DecData['frame']['infos']['subType']
-			id_lsb = DecData['frame']['infos']['id_lsb']
-			id_msb = DecData['frame']['infos']['id_msb']
+			if protocol == "2":
+				id_lsb = DecData['frame']['infos']['id_lsb']
+				id_msb = DecData['frame']['infos']['id_msb']
+			elif protocol == "3" :
+				id = DecData['frame']['infos']['id']
 			qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
 			Domoticz.Debug("id_lsb : " + id_lsb + " id_msb : " + id_msb + " subType :" + SubType)
 			##############################################################################################################
-			if SubType == "0" : # Detector/sensor
+			if SubType == "0" and protocol == "2": # Detector/sensor visonic
 				Tamper=qualifier[0]
 				Alarm=qualifier[1]
 				Battery=qualifier[2]
@@ -450,6 +453,25 @@ def ReadData(ReqRcv):
 					nbrdevices=nbrdevices+1
 					#Options = {"LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
+				elif IsCreated == True :
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
+			##############################################################################################################
+			##############################################################################################################
+			if SubType == "0" and protocol == ""3 : # blyss 
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType) }
+				Domoticz.Debug("Options to find or set : " + str(Options))
+				for x in Devices:
+					if Devices[x].Options == Options :
+						IsCreated = True
+						Domoticz.Log("Devices already exist. Unit=" + str(x))
+						Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+						nbrdevices=x
+					if IsCreated == False :
+						nbrdevices=x
+				if IsCreated == False and Parameters["Mode4"] == "True":
+					nbrdevices=nbrdevices+1
+					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, Type=16, Switchtype=0, Options=Options).Create()
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
 				elif IsCreated == True :
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
@@ -1210,9 +1232,9 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if protocol =="2": 
 		frequency=Options['frequency']
 		if frequency == "433920":
-			protocol="VISIONIC433"
+			protocol="VISONIC433"
 		if frequency == "868950":
-			protocol="VISIONIC868"
+			protocol="VISONIC868"
 	if protocol =="3": protocol="BLYSS"
 	if protocol =="4": protocol="CHACON"
 	if protocol =="6": protocol="DOMIA"
@@ -1261,9 +1283,9 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		
 	if infoType == "10" :
 		id=Options['id']
-		#Area=Options['area']
+		Area=Options['area']
 		if Level == 0 :
-			lineinput='ZIA++' + str("DIM %0 " + protocol + " ID " + id)
+			lineinput='ZIA++' + str("DIM %0 " + protocol + " ID " + id )
 		if Level == 10 :
 			lineinput='ZIA++' + str("DIM %1 " + protocol + " ID " + id)
 		if Level == 20 :
