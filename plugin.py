@@ -419,9 +419,10 @@ def ReadData(ReqRcv):
 				id_lsb = DecData['frame']['infos']['id_lsb']
 				id_msb = DecData['frame']['infos']['id_msb']
 				qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
+				Domoticz.Debug("id_lsb : " + id_lsb + " id_msb : " + id_msb + " subType :" + SubType)
 			elif protocol == "3" :
 				id = DecData['frame']['infos']['id']
-			Domoticz.Debug("id_lsb : " + id_lsb + " id_msb : " + id_msb + " subType :" + SubType)
+				Domoticz.Debug("id : " + id + " subType :" + SubType)
 			##############################################################################################################
 			if SubType == "0" and protocol == "2": # Detector/sensor visonic
 				Tamper=qualifier[0]
