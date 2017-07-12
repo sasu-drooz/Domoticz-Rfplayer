@@ -416,10 +416,9 @@ def ReadData(ReqRcv):
 			frequency = DecData['frame']['header']['frequency']
 			SubType = DecData['frame']['infos']['subType']
 			if protocol == "2":
-				id_lsb = DecData['frame']['infos']['id_lsb']
-				id_msb = DecData['frame']['infos']['id_msb']
+				id_= DecData['frame']['infos']['id']
 				qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
-				Domoticz.Debug("id_lsb : " + id_lsb + " id_msb : " + id_msb + " subType :" + SubType)
+				Domoticz.Debug("id : " + id + " subType :" + SubType)
 			elif protocol == "3" :
 				id = DecData['frame']['infos']['id']
 				Domoticz.Debug("id : " + id + " subType :" + SubType)
@@ -440,7 +439,7 @@ def ReadData(ReqRcv):
 					Battery=100
 				else :
 					Battery=5
-				Options = {"infoType":infoType, "id_lsb": str(id_lsb), "id_msb": str(id_msb), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					if Devices[x].Options == Options :
