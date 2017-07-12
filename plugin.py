@@ -473,9 +473,12 @@ def ReadData(ReqRcv):
 				if IsCreated == False and Parameters["Mode4"] == "True":
 					nbrdevices=nbrdevices+1
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, Type=16, Switchtype=0, Options=Options).Create()
-					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
+					Devices[nbrdevices].Update(nValue =0, sValue = "on", Options = Options)
 				elif IsCreated == True :
-					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
+					svalue = Devices[Unit].nValue
+					if svalue =="on": svalue="off"
+					if svalue =="off": svalue="on"
+					Devices[nbrdevices].Update(nValue =0, sValue = svalue)
 			##############################################################################################################
 			elif SubType == "1":  # remote
 				Battery=qualifier[2]
