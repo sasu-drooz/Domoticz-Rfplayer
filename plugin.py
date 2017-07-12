@@ -474,7 +474,7 @@ def ReadData(ReqRcv):
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, Type=16, Switchtype=0, Options=Options).Create()
 					Devices[nbrdevices].Update(nValue =0, sValue = "on", Options = Options)
 				elif IsCreated == True :
-					svalue = Devices[Unit].nValue
+					svalue = Devices[nbrdevices].nValue
 					if svalue =="on": svalue="off"
 					if svalue =="off": svalue="on"
 					Devices[nbrdevices].Update(nValue =0, sValue = svalue)
