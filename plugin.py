@@ -1161,6 +1161,8 @@ def ReadData(ReqRcv):
 					status=0
 				if qualifier=="2":
 					status=10
+				if qualifier=="1":
+					status=20
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
@@ -1173,7 +1175,7 @@ def ReadData(ReqRcv):
 						nbrdevices=x
 				if IsCreated == False and Parameters["Mode4"] == "True":
 					nbrdevices=nbrdevices+1
-					#Options = {"LevelActions": "|||", "LevelNames": "Off|Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+					#Options = {"LevelActions": "||||", "LevelNames": "Off|Alarm|Tamper", "LevelOffHidden": "False", "SelectorStyle": "0"}
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
 				elif IsCreated == True :
