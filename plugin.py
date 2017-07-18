@@ -477,7 +477,7 @@ def ReadData(ReqRcv):
 					svalue = Devices[nbrdevices].nValue
 					if svalue =="on": svalue="off"
 					if svalue =="off": svalue="on"
-					Devices[nbrdevices].Update(nValue =0, sValue = svalue)
+					Devices[nbrdevices].Update(nValue =0, sValue = str(svalue))
 			##############################################################################################################
 			elif SubType == "1":  # remote
 				Battery=qualifier[2]
