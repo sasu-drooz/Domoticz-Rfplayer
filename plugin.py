@@ -1177,9 +1177,9 @@ def ReadData(ReqRcv):
 					nbrdevices=nbrdevices+1
 					#Options = {"LevelActions": "||||", "LevelNames": "Off|Alarm|Tamper", "LevelOffHidden": "False", "SelectorStyle": "0"}
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
-					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 				elif IsCreated == True :
-					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery)
+					Devices[nbrdevices].Update(nValue =0,sValue = str(status))
 			##############################################################################################################
 			elif SubType == "1":  # remote
 				id = DecData['frame']['infos']['id']
