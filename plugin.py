@@ -1156,22 +1156,11 @@ def ReadData(ReqRcv):
 			##############################################################################################################
 			if SubType == "0" : # Detector/sensor
 				id = DecData['frame']['infos']['id']
-				qualifier = list(bin(DecData['frame']['infos']['qualifier'])[2:])
-				Tamper=qualifier[0]
-				Alarm=qualifier[1]
-				Battery=qualifier[2]
-				if Tamper=="0" and Alarm=="0" :
+				qualifier = DecData['frame']['infos']['qualifier']
+				if qualifier=="0":
 					status=0
-				if Tamper=="1" and Alarm=="0" :
+				if qualifier=="2":
 					status=10
-				if Tamper=="0" and Alarm=="1" :
-					status=20
-				if Tamper=="1" and Alarm=="1" :
-					status=30
-				if Battery=="0" :
-					Battery=100
-				else :
-					Battery=5
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
@@ -1184,7 +1173,7 @@ def ReadData(ReqRcv):
 						nbrdevices=x
 				if IsCreated == False and Parameters["Mode4"] == "True":
 					nbrdevices=nbrdevices+1
-					#Options = {"LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+					#Options = {"LevelActions": "|||", "LevelNames": "Off|Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 					Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 					Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
 				elif IsCreated == True :
