@@ -257,9 +257,9 @@ def onConnect(Connection, Status, Description):
 	global _plugin
 	_plugin.onConnect(Connection, Status, Description)
 
-def onMessage(Connection, Data, Status, Extra):
+def onMessage(Connection, Data):
 	global _plugin
-	_plugin.onMessage(Connection, Data, Status, Extra)
+	_plugin.onMessage(Connection, Data)
 
 def onCommand(Unit, Command, Level, Hue):
 	global _plugin
