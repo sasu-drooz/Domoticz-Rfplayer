@@ -190,7 +190,7 @@ class BasePlugin:
 		return True
 
 	# present de base 
-	def onMessage(self, Connection, Data, Status, Extra):
+	def onMessage(self, Connection, Data):
 		global Tmprcv
 		global ReqRcv
 		###########################################
