@@ -1448,9 +1448,9 @@ def CreateDevice():
 	########### create device if not find ###############
 	if IsCreated == False :
 		nbrdevices=nbrdevices+1
-		if infoType =="3"
+		if infoType =="3" :
 			Domoticz.Device(Name=" RTS - " + Parameters["Mode2"],  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
-		else
+		else :
 			Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=stype).Create()
 		Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 	Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
