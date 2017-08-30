@@ -148,9 +148,6 @@ class BasePlugin:
 		SendtoRfplayer(Unit, Command, Level, Hue)
 		return True
 
-	def onDisconnect(self, Connection):
-		return
-
 	def onHeartbeat(self):
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-85", "floorNoise": "-97", "rfQuality": "3", "protocol": "7", "protocolMeaning": "OWL", "infoType": "8", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x0002", "id_PHYMeaning": "CM180", "adr_channel": "35216",  "adr": "2201",  "channel": "0",  "qualifier": "1",  "lowBatt": "1", "measures" : [{"type" : "energy", "value" : "871295", "unit" : "Wh"}, {"type" : "power", "value" : "499", "unit" : "W"}]}}}'
 		#ReadData(ReqRcv)
@@ -159,14 +156,6 @@ class BasePlugin:
 			SerialConn.Connect()
 		return True
 
-	def SetSocketSettings(self, power):
-		return
-
-	def GetSocketSettings(self):
-		return
-
-	def genericPOST(self, commandName):
-		return
  
 
 global _plugin
@@ -191,14 +180,6 @@ def onMessage(Connection, Data):
 def onCommand(Unit, Command, Level, Hue):
 	global _plugin
 	_plugin.onCommand(Unit, Command, Level, Hue)
-
-def onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile):
-	global _plugin
-	_plugin.onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile)
-
-def onDisconnect(Connection):
-	global _plugin
-	_plugin.onDisconnect(Connection)
 
 def onHeartbeat():
 	global _plugin
