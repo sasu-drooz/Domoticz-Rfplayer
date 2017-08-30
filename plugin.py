@@ -383,13 +383,13 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		qualifier=Options['subType']
 		if qualifier=="0":
 		###start MAj from Deennoo
-		   if Level == 0 :
+			if Level == 0 :
 				lineinput='ZIA++' + str("OFF " + protocol + id )
-		   if Level == 10 :
+			if Level == 10 :
 				lineinput='ZIA++' + str("DIM %50 " + protocol + id )
-		   if Level == 20 :
+			if Level == 20 :
 				lineinput='ZIA++' + str("ON " + protocol + id )
-		   if Level == 30 :
+			if Level == 30 :
 				lineinput='ZIA++' + str("ASSOC " + protocol + id )
 		###End MAj from Deennoo
 		if qualifier=="1":
