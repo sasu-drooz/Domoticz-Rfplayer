@@ -156,7 +156,6 @@ class BasePlugin:
 			SerialConn.Connect()
 		return True
 
- 
 
 global _plugin
 _plugin = BasePlugin()
@@ -208,11 +207,6 @@ def UpdateDevice(Unit, nValue, sValue, Image, SignalLevel, BatteryLevel):
 			Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' SignalLevel:"+str(SignalLevel)+" batteryLevel:'"+str(BatteryLevel)+"%' ("+Devices[Unit].Name+")")
 	return
 
-	
-	
-	
-	
-	
 def RFpConf():
 	###################Configure Rfplayer ~##################
 	lineinput='ZIA++RECEIVER + *'
@@ -223,7 +217,7 @@ def RFpConf():
 		lineinput='ZIA++SETMAC ' + Parameters["Mode1"]
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	return
-	
+
 def ReadConf(ReqRcv):
 	global RfPmac
 	ReqRcv=ReqRcv.replace("ZIA--", "")
@@ -231,8 +225,7 @@ def ReadConf(ReqRcv):
 	RfPmac = DecData['systemStatus']['info'][2]['v']
 	Domoticz.Log('rfp1000 mac :' + str(RfPmac))
 	return RfPmac
-	
-	
+
 def ReadData(ReqRcv):
 	##############################################################################################################
 	# decoding data from RfPlayer 
@@ -321,7 +314,6 @@ def ReadData(ReqRcv):
 		Domoticz.Log("Error while decoding or reading JSON")
 		Domoticz.Debug("Debug : Error Decoding/Reading  " + ReqRcv)
 		return
-
 
 def SendtoRfplayer(Unit, Command, Level, Hue):
 	Options=Devices[Unit].Options
@@ -426,8 +418,6 @@ def writetofile(ReqRcv):
 	with open(Parameters["HomeFolder"]+"Response.txt", "at") as text_file:
 		print(ReqRcv, file=text_file)
 	return
-	
-
 
 def DecodeInfoType0(DecData):
 	IsCreated=False
@@ -1435,3 +1425,4 @@ def CreateDevice():
 			Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=stype).Create()
 		Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 	Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
+
