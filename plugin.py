@@ -588,6 +588,8 @@ def ReadData(ReqRcv):
 			protocol = DecData['frame']['header']['protocol']
 			SubType = DecData['frame']['infos']['subType']
 			id = DecData['frame']['infos']['id']
+			idb= bin(int(id))[2:]
+			idmod= int(idb[1:],2)
 			qualifier = DecData['frame']['infos']['qualifier']
 			if SubType == "0" :
 				if qualifier == "1" :
@@ -602,7 +604,7 @@ def ReadData(ReqRcv):
 					Domoticz.Log("Unknow qualifier - please send log to dev team")
 				#################################################################################################################
 				Domoticz.Debug("id : " + id)		
-				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Options = {"infoType": infoType, "id": str(idmod), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Debug("Options to find or set : " + str(Options))
 				for x in Devices:
 					#JJE - start
