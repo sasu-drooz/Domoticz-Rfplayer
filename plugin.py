@@ -17,7 +17,7 @@
 #################################################################################################
 #
 """
-<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.3" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
+<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.4" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
 	<params>
 		<param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
 		<param field="Mode1" label="Mac Address" width="200px"/>
@@ -229,7 +229,7 @@ class BasePlugin:
 		return True
 
 	def onHeartbeat(self):
-		#infotype0 
+		#infotype0  ==> ok
 		#ReqRcv = 'ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-44", "floorNoise": "-99", "rfQuality": "10", "protocol": "6", "protocolMeaning": "DOMIA", "infoType": "0", "frequency": "433920"},"infos": {"subType": "0", "id": "235", "subTypeMeaning": "OFF", "idMeaning": "O12"}}}'
 		#infotype1 ==> ok
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-72", "floorNoise": "-106", "rfQuality": "8", "protocol": "4", "protocolMeaning": "CHACON", "infoType": "1", "frequency": "433920"},"infos": {"subType": "1", "id": "424539265", "subTypeMeaning": "ON"}}}'
