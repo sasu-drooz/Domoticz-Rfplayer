@@ -229,7 +229,8 @@ class BasePlugin:
 		return True
 
 	def onHeartbeat(self):
-		#infotype0
+		#infotype0 
+		#ReqRcv = 'ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-44", "floorNoise": "-99", "rfQuality": "10", "protocol": "6", "protocolMeaning": "DOMIA", "infoType": "0", "frequency": "433920"},"infos": {"subType": "0", "id": "235", "subTypeMeaning": "OFF", "idMeaning": "O12"}}}'
 		#infotype1 ==> ok
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-72", "floorNoise": "-106", "rfQuality": "8", "protocol": "4", "protocolMeaning": "CHACON", "infoType": "1", "frequency": "433920"},"infos": {"subType": "1", "id": "424539265", "subTypeMeaning": "ON"}}}'
 		#infotype2
@@ -246,7 +247,7 @@ class BasePlugin:
 		#infotype11
 		
 		
-		ReadData(ReqRcv)
+		#ReadData(ReqRcv)
 		global SerialConn
 		if (SerialConn.Connected() != True):
 			SerialConn.Connect()
