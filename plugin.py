@@ -782,10 +782,10 @@ def DecodeInfoType3(DecData, infoType):
 		Domoticz.Debug("id : " + id)
 		qualifier = DecData['frame']['infos']['qualifier']
 		Domoticz.Debug("protocol : " + str(protocol) + " - SubType : " + str(SubType) +" - id : " + str(id) + " - Qualifier : " + str(qualifier))
-		if len(str(id))== 8 :
-			Domoticz.Debug("len id = 8")
-			idb= bin(int(id))[2:]
-			id= int(idb[1:],2)
+#		if len(str(id))== 8 :
+#			Domoticz.Debug("len id = 8")
+#			idb= bin(int(id))[2:]
+#			id= int(idb[1:],2)
 		if SubType == "0" :
 			Domoticz.Debug("subtype = 0")
 			if qualifier == "1" :
