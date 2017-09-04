@@ -448,13 +448,13 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		if qualifier=="0":
 		###start MAj from Deennoo
 			if Level == 0 :
-				lineinput='ZIA++' + str("OFF " + protocol + id )
+				lineinput='ZIA++' + str("OFF " + protocol + " ID " + id )
 			if Level == 10 :
-				lineinput='ZIA++' + str("DIM %50 " + protocol + id )
+				lineinput='ZIA++' + str("DIM %50 " + protocol + " ID " + id )
 			if Level == 20 :
-				lineinput='ZIA++' + str("ON " + protocol + id )
+				lineinput='ZIA++' + str("ON " + protocol + " ID " + id )
 			if Level == 30 :
-				lineinput='ZIA++' + str("ASSOC " + protocol + id )
+				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id )
 		###End MAj from Deennoo
 		if qualifier=="1":
 			if Level == 10 :
