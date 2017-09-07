@@ -514,15 +514,17 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
 	if infoType == "11" :
-		id=Options['id']
-		if Level == 10 :
-			lineinput='ZIA++' + str("ON " + protocol + " ID " + id + " QUALIFIER " + qualifier)
-		if Level == 20 :
-			lineinput='ZIA++' + str("OFF " + protocol + " ID " + id + " QUALIFIER " + qualifier)
-		if Level == 30 :
-			lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id + " QUALIFIER " + qualifier)
-		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
-		Devices[Unit].Update(nValue =0,sValue = str(Level))
+		subType=Options['subType']
+		if subType == "1" :
+			id=Options['id']
+			if Level == 10 :
+				lineinput='ZIA++' + str("ON " + protocol + " ID " + id )#+ " QUALIFIER " + qualifier)
+			if Level == 20 :
+				lineinput='ZIA++' + str("OFF " + protocol + " ID " + id ) #+ " QUALIFIER " + qualifier)
+			if Level == 30 :
+				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id ) #+ " QUALIFIER " + qualifier)
+			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+			Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
 	return
 
@@ -1374,6 +1376,7 @@ def DecodeInfoType11(DecData, infoType):
 		nbrdevices=1
 		protocol = DecData['frame']['header']['protocol']
 		SubType = DecData['frame']['infos']['subType']
+		frequency=DecData['frame']['header']['frequency']
 		##############################################################################################################
 		if SubType == "0" : # Detector/sensor
 			id = DecData['frame']['infos']['id']
@@ -1386,7 +1389,7 @@ def DecodeInfoType11(DecData, infoType):
 				status=20
 			if qualifier == "10":
 				status=0
-			Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency": str(frequency), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				#JJE - start
@@ -1417,7 +1420,7 @@ def DecodeInfoType11(DecData, infoType):
 				status=0
 			if qualifier=="3" :
 				status=20
-			Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency": str(frequency), "subType": str(SubType), "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				#JJE - start
