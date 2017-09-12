@@ -116,33 +116,46 @@ class BasePlugin:
 				infoType="11"
 			if infoType == "0" or infoType == "1" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol)}
+				stype=0
 			if infoType == "2" and Parameters["Mode5"] =="1":
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency":"433920"}
+				stype=0
 			if infoType == "2" and Parameters["Mode5"] =="2":
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency":"868950"}
+				stype=0
 			if infoType == "3" and Parameters["Mode5"] =="11":
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "0", "LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				18
 			if infoType == "3" and Parameters["Mode5"] =="14":
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="6":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="61":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="62":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="63":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"433920"}
+				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="7":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "subType": "0", "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|Eco|Moderat|Medio|Comfort|Stop|Out of frost|Special|Auto|Centralised", "LevelOffHidden": "True", "SelectorStyle": "0"}
+				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="71":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="72":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="73":
 				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "subType": "0", "frequency":"868950"}
+				stype=0
 			if infoType == "11" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
-						
+				stype=18		
 			IsCreated=False
 			x=0
 			nbrdevices=1
