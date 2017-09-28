@@ -1343,7 +1343,7 @@ def DecodeInfoType10(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["area"] == Options["area"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+				if DOptions["infoType"] == Options["infoType"] and DOptions["id"] == Options["id"] and DOptions["area"] == Options["area"] and DOptions["protocol"] == Options["protocol"] :
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1365,7 +1365,7 @@ def DecodeInfoType10(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+				if DOptions["infoType"] == Options["infoType"] and DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] :
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
