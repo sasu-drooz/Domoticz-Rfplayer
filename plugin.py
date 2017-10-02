@@ -838,6 +838,7 @@ def DecodeInfoType4(DecData, infoType):
 		protocol = DecData['frame']['header']['protocol']
 		id_PHY = DecData['frame']['infos']['id_PHY']
 		adr_channel = DecData['frame']['infos']['adr_channel']
+		channel = DecData['frame']['infos']['channel']
 		qualifier = DecData['frame']['infos']['qualifier']
 		try:
 			lowBatt = DecData['frame']['infos']['lowBatt']
@@ -866,7 +867,7 @@ def DecodeInfoType4(DecData, infoType):
 				nbrdevices=x
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=nbrdevices+1
-			Domoticz.Device(Name="Temp - " + adr_channel, Unit=nbrdevices, Type=80, Switchtype=0).Create()
+			Domoticz.Device(Name="Temp - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=80, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp))
@@ -886,7 +887,7 @@ def DecodeInfoType4(DecData, infoType):
 				nbrdevices=x
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=nbrdevices+1
-			Domoticz.Device(Name="Hygro - " + adr_channel, Unit=nbrdevices, Type=81, Switchtype=0).Create()
+			Domoticz.Device(Name="Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=81, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1",Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1")
@@ -906,7 +907,7 @@ def DecodeInfoType4(DecData, infoType):
 				nbrdevices=x
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=nbrdevices+1
-			Domoticz.Device(Name="Temp/Hygro - " + adr_channel, Unit=nbrdevices, Type=82, Switchtype=0).Create()
+			Domoticz.Device(Name="Temp/Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=82, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro))
@@ -1342,7 +1343,7 @@ def DecodeInfoType10(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["area"] == Options["area"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+				if DOptions["infoType"] == Options["infoType"] and DOptions["id"] == Options["id"] and DOptions["area"] == Options["area"] and DOptions["protocol"] == Options["protocol"] :
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1364,7 +1365,7 @@ def DecodeInfoType10(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+				if DOptions["infoType"] == Options["infoType"] and DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] :
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
