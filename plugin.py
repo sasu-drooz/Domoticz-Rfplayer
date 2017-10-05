@@ -647,18 +647,24 @@ def DecodeInfoType2(DecData, infoType):
 			Domoticz.Debug("id : " + str(id) + " subType :" + str(SubType))
 		##############################################################################################################
 		if SubType == "0" and protocol == "2": # Detector/sensor visonic
-			if qualifier =="8" :
+			#Qualifier Meaning for MCT-320
+			#"qualifier": "6", "qualifierMeaning": { "flags": ["Alarm","LowBatt"]}}}}
+			#"qualifier": "4", "qualifierMeaning": { "flags": ["LowBatt"]}}}}
+			#"qualifier": "2", "qualifierMeaning": { "flags": ["Alarm"]}}}}
+			#"qualifier": "0", "qualifierMeaning": { "flags": []}}}}
+			#"qualifier": "8", "qualifierMeaning": { "flags": ["Supervisor/Alive"]}}}}
+			#"qualifier": "12", "qualifierMeaning": { "flags": ["LowBatt","Supervisor/Alive"]}}}}
+			if qualifier =="8" or qualifier=="4" or qualifier=="12" or qualifier=="0":#Close
 				status=0
 			if qualifier == "1" :
 				status=10
-			if qualifier =="7" :
+			if qualifier =="7" or qualifier=="2" or qualifier=="6":#Open
 				status=20
 			if qualifier == "3" :
 				status=30
-			#if Battery=="0" :
-			#	Battery=100
-			#else :
-			Battery=0
+			Battery=99			#Default Value
+			if qualifier == "4" or qualifier =="6" or qualifier =="12":
+				Battery=10	
 			Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": str(SubType), "LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
