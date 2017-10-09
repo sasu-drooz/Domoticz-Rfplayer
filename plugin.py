@@ -171,8 +171,8 @@ class BasePlugin:
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-		#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+		#				if Devices[x].Options == Options :  # see https://stackoverflow.com/questions/5352546/extract-subset-of-key-value-pairs-from-python-dictionary-object
+				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
