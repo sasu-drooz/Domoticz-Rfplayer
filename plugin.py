@@ -44,6 +44,7 @@
 				<option label="X2D - 868 - REGULATION" value="72"/>
 				<option label="X2D - 868 - THERMIC_AREA_STATE" value="73"/>
 				<option label="X2D - SHUTTER" value="8"/>
+				<option label="X2D - ELEC (heater regulation)" value="20"/>
 				<option label="RTS - SHUTTER" value="11"/>
 				<option label="RTS - PORTAL" value="14"/>
 				<option label="BLYSS" value="12"/>
@@ -100,6 +101,7 @@ class BasePlugin:
 			if Parameters["Mode5"] =="12": protocol="3" #BLYSS
 			if Parameters["Mode5"] =="13": protocol="11" #PARROT
 			if Parameters["Mode5"] =="16": protocol="10" #KD101
+			if Parameters["Mode5"] == "20": protocol="20" # X2D-ELEC
 			id = Parameters["Mode2"]
 			Area = Parameters["Mode3"]
 			if Parameters["Mode5"] == "4" or Parameters["Mode5"] == "5" or Parameters["Mode5"] == "13" :
@@ -114,6 +116,8 @@ class BasePlugin:
 				infoType="10"
 			if Parameters["Mode5"] == "8":
 				infoType="11"
+			if Parameters["Mode5"] == "20":
+				infoType="12"
 			if infoType == "0" or infoType == "1" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol)}
 				stype=0
@@ -156,6 +160,9 @@ class BasePlugin:
 			if infoType == "11" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				stype=18		
+			if infoType == "12" :
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "area": str(Area), "subType": "0", "LevelActions": "|||||", "LevelNames": "Assoc|Off|HG|Eco|Conf", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				stype=18
 			IsCreated=False
 			x=0
 			nbrdevices=1
@@ -164,8 +171,8 @@ class BasePlugin:
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-		#				if Devices[x].Options == Options :
-				if DOptions["id"] == Options["id"] and DOptions["protocol"] == Options["protocol"] and DOptions["infoType"] == Options["infoType"] :
+		#				if Devices[x].Options == Options :  # see https://stackoverflow.com/questions/5352546/extract-subset-of-key-value-pairs-from-python-dictionary-object
+				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 				#JJE - end
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -539,6 +546,22 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
+	# X2DELEC
+	if infoType == "12" :
+		Domoticz.Debug("SendtoRfplayer - Options find in DB: " + str(Devices[Unit].Options) + " for devices unit " + str(Unit) + " command: "+str(Command) + " level: "+str(Level)+ " hue:"+str(Hue))
+		area = str(Options['area'])
+		if Level == 0: # Assoc
+			lineinput="ZIA++ ASSOC X2DELEC A"+area
+		if Level == 10: # Off
+			lineinput="ZIA++ OFF X2DELEC A"+area + " %4"
+		if Level == 20: # HG
+			lineinput="ZIA++ OFF X2DELEC A"+area + " %5"
+		if Level == 30: # Eco
+			lineinput="ZIA++ OFF X2DELEC A"+area + " %0"
+		if Level == 40: # Confort
+			lineinput="ZIA++ ON X2DELEC A"+area + " %3"
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+		Devices[Unit].Update(nValue =0,sValue = str(Level))
 	return
 
 def DecodeInfoType0(DecData, infoType):
