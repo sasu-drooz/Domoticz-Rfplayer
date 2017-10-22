@@ -515,7 +515,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		if Level == 50 : # confort
 			lineinput="ZIA++ ON X2DELEC A"+Area + " %3"
 		if Level == 60 : # assoc
-			lineinput="ZIA++ ON X2DELEC A"+Area + " %3"
+			lineinput="ZIA++ ASSOC X2DELEC A"+Area
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
