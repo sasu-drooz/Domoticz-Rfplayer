@@ -467,34 +467,34 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if protocol =="10": protocol="KD101"
 	if protocol =="11": protocol="PARROT"
 
-if infoType == "0" and  protocol == "PARROT":
-	id=Options['id']
-	lineinput='ZIA++' + str(Command.upper()) + " " + protocol + id
-	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
-	if Command == "On":
-		Devices[Unit].Update(nValue =1,sValue = "on")
-	if Command == "Off":
-		Devices[Unit].Update(nValue =0,sValue = "off")
-		
-if infoType == "0" and protocol != "PARROT":
-	id=Options['id']
-	lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
-	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
-	if Command == "On":
-		Devices[Unit].Update(nValue =1,sValue = "on")
-	if Command == "Off":
-		Devices[Unit].Update(nValue =0,sValue = "off")
-		
-if infoType == "1" or infoType == "2":
-	id=Options['id']
-	lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
-	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
-	if Command == "On":
-		Devices[Unit].Update(nValue =1,sValue = "on")
-	if Command == "Off":
-		Devices[Unit].Update(nValue =0,sValue = "off")
+	if infoType == "0" and  protocol == "PARROT":
+		id=Options['id']
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + id
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+		if Command == "On":
+			Devices[Unit].Update(nValue =1,sValue = "on")
+		if Command == "Off":
 			Devices[Unit].Update(nValue =0,sValue = "off")
-	
+			
+	if infoType == "0" and protocol != "PARROT":
+		id=Options['id']
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+		if Command == "On":
+			Devices[Unit].Update(nValue =1,sValue = "on")
+		if Command == "Off":
+			Devices[Unit].Update(nValue =0,sValue = "off")
+			
+	if infoType == "1" or infoType == "2":
+		id=Options['id']
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " ID " + id
+		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+		if Command == "On":
+			Devices[Unit].Update(nValue =1,sValue = "on")
+		if Command == "Off":
+			Devices[Unit].Update(nValue =0,sValue = "off")
+				#Devices[Unit].Update(nValue =0,sValue = "off")
+		
 	if infoType == "3" :
 		id=Options['id']
 		qualifier=Options['subType']
@@ -551,7 +551,7 @@ if infoType == "1" or infoType == "2":
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
-	return
+
 
 def DecodeInfoType0(DecData, infoType):
 	try :
