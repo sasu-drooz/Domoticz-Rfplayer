@@ -890,7 +890,7 @@ def DecodeInfoType4(DecData, infoType):
 		except IndexError:
 			hygro = "0"
 		temphygro = temp + ';' + hygro + ';1'
-		Domoticz.Debug("id : " + id + " adr_channel : " + adr_channel)
+		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
 		
 		Options = {"infoType":infoType, "id": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "Temp" : "1"}
 		Domoticz.Debug("Options to find or set : " + str(Options))
