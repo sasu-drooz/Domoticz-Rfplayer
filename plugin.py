@@ -17,7 +17,7 @@
 #################################################################################################
 #
 """
-<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.10" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
+<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.11" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
 	<params>
 		<param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
 		<param field="Mode1" label="Mac Address" width="200px"/>
