@@ -17,7 +17,7 @@
 #################################################################################################
 #
 """
-<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.10" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
+<plugin key="RFplayer" name="RFplayer" author="zaraki673 - Drooz" version="1.0.11" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
 	<params>
 		<param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
 		<param field="Mode1" label="Mac Address" width="200px"/>
@@ -891,6 +891,7 @@ def DecodeInfoType4(DecData, infoType):
 		adr_channel = DecData['frame']['infos']['adr_channel']
 		channel = DecData['frame']['infos']['channel']
 		qualifier = DecData['frame']['infos']['qualifier']
+		
 		try:
 			lowBatt = DecData['frame']['infos']['lowBatt']
 		except IndexError:
@@ -903,6 +904,8 @@ def DecodeInfoType4(DecData, infoType):
 			hygro = DecData['frame']['infos']['measures'][1]['value']
 		except IndexError:
 			hygro = "0"
+		battery_level = 100 if DecData['frame']['infos']['lowBatt'] == "0" else 0
+		signal_level = int(DecData['frame']['header']['rfQuality'])
 		temphygro = temp + ';' + hygro + ';1'
 		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
 		IsCreated=False
@@ -931,9 +934,9 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices +=1
 			Domoticz.Device(Name="Temp - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=80, Switchtype=0).Create()
-			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp),Options = Options)
+			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
-			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp))
+			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp), SignalLevel=signal_level , BatteryLevel=battery_level)
 		#####################################################################################################################
 		IsCreated=False
 		x=0
@@ -960,9 +963,9 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices += 1
 			Domoticz.Device(Name="Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=81, Switchtype=0).Create()
-			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1",Options = Options)
+			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1", SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
-			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1")
+			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1", SignalLevel=signal_level , BatteryLevel=battery_level)
 		#####################################################################################################################	
 		IsCreated=False
 		x=0
@@ -990,9 +993,9 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices += 1
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=82, Switchtype=0).Create()
-			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro),Options = Options)
+			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
-			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro))
+			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level)
 	except:
 		Domoticz.Log("Error while decoding Infotype4 frame")
 		return
@@ -1522,7 +1525,7 @@ def DecodeInfoType10(DecData, infoType):
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				DOptions = Devices[x].Options
-				Domoticz.Log("scanning devices: "+repr(x) + repr(DOptions))
+				Domoticz.Debug("scanning devices: "+repr(x) + repr(DOptions))
 				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1542,7 +1545,7 @@ def DecodeInfoType10(DecData, infoType):
 			Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
-				Domoticz.Log("scanning devices: "+repr(x))
+				Domoticz.Debug("scanning devices: "+repr(x))
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
 				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')}:
