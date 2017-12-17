@@ -1525,7 +1525,7 @@ def DecodeInfoType10(DecData, infoType):
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				DOptions = Devices[x].Options
-				Domoticz.Log("scanning devices: "+repr(x) + repr(DOptions))
+				Domoticz.Debug("scanning devices: "+repr(x) + repr(DOptions))
 				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 					IsCreated = True
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1545,7 +1545,7 @@ def DecodeInfoType10(DecData, infoType):
 			Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
-				Domoticz.Log("scanning devices: "+repr(x))
+				Domoticz.Debug("scanning devices: "+repr(x))
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
 				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')}:
