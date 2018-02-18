@@ -65,8 +65,21 @@
 import Domoticz
 import datetime
 import json
+import traceback
 
 global ReqRcv
+global InfoType4SubTypes
+
+InfoType4SubTypes = {}
+#                             T/H T  H
+InfoType4SubTypes['0x1A2D'] = (1, 1, 1) # THGR122/228/238/268, THGN122/123/132 Thermo+hygro V2
+InfoType4SubTypes['0xCA2C'] = (4, 1, 1) # THGR328 Thermo+hygro V2
+InfoType4SubTypes['0x0ACC'] = (3, 1, 1) # RTGR328 Thermo+hygro V2
+InfoType4SubTypes['0xEA4C'] = (1, 2, 1) # THC238/268, THWR288,THRN122,THN122/132,AW129/131 thermometer V2
+InfoType4SubTypes['0x1A3D'] = (6, 1, 1) # THGR918/928, THGRN228, THGN50 Thermo+hygro V2
+InfoType4SubTypes['0x5A6D'] = (1, 1, 1) # THGR918N Temp+Pressure V2
+InfoType4SubTypes['0xCA48'] = (1, 3, 1) # THWR800 S. pool thermo V3
+InfoType4SubTypes['0xFA28'] = (2, 1, 1) # THGR810, THGN800 Thermo+hygro V3 
 
 
 class BasePlugin:
@@ -931,9 +944,12 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False :
 			Domoticz.Debug("isCreated = false")
 		nbrdevices=x
+		subType = 0
+		if id_PHY in InfoType4SubTypes:
+			subType = InfoType4SubTypes[id_PHY][1]
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices +=1
-			Domoticz.Device(Name="Temp - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=80, Switchtype=0).Create()
+			Domoticz.Device(Name="Temp - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=80, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp), SignalLevel=signal_level , BatteryLevel=battery_level)
@@ -960,9 +976,12 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False :
 			Domoticz.Debug("isCreated = false")
 		nbrdevices=x
+		subType = 0
+		if id_PHY in InfoType4SubTypes:
+			subType = InfoType4SubTypes[id_PHY][2]
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices += 1
-			Domoticz.Device(Name="Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=81, Switchtype=0).Create()
+			Domoticz.Device(Name="Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=81, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1", SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1", SignalLevel=signal_level , BatteryLevel=battery_level)
@@ -990,14 +1009,18 @@ def DecodeInfoType4(DecData, infoType):
 		if IsCreated == False :
 			Domoticz.Debug("isCreated = false")
 		nbrdevices=x
+		subType = 0
+		if id_PHY in InfoType4SubTypes:
+			subType = InfoType4SubTypes[id_PHY][0]
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices += 1
-			Domoticz.Device(Name="Temp/Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=82, Switchtype=0).Create()
+			Domoticz.Device(Name="Temp/Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=82, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level)
 	except:
 		Domoticz.Log("Error while decoding Infotype4 frame")
+		#Domoticz.Log(traceback.format_exc())
 		return
 
 def DecodeInfoType5(DecData, infoType):
