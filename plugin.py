@@ -169,7 +169,7 @@ class BasePlugin:
 					Domoticz.Debug("Options find in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			########### create device if not found ###############
 			if IsCreated == False :
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				if infoType =="3" :
 					Domoticz.Device(Name="RTS - " + Parameters["Mode2"],  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				elif infoType=="10" and Options['function']=="2" :
@@ -248,7 +248,7 @@ class BasePlugin:
 		#infotype2
 		#==> ok
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-51", "floorNoise": "-103", "rfQuality": "10", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "335547184", "qualifier": "3", "qualifierMeaning": { "flags": ["Tamper","Alarm"]}}}}'
-		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-55", "floorNoise": "-102", "rfQuality": "10", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "335547184", "qualifier": "1", "qualifierMeaning": { "flags": ["Tamper"]}}}}'
+		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-55", "floorNoise": "-102", "rfQuality": "10", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "2034024048", "qualifier": "1", "qualifierMeaning": { "flags": ["Tamper"]}}}}'
 		#OK ==>  protocol = 3
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-66", "floorNoise": "-106", "rfQuality": "10", "protocol": "3", "protocolMeaning": "BLYSS", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "256292321", "qualifier": "0"}}}'
 		###########
@@ -256,6 +256,9 @@ class BasePlugin:
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-64", "floorNoise": "-103", "rfQuality": "9", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "14813191", "qualifier": "4", "qualifierMeaning": { "flags": ["My"]}}}}'
 	###########
 		#infotype4
+		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-86", "floorNoise": "-100", "rfQuality": "3", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "4", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0xEA4C", "id_PHYMeaning": "THC238/268,THWR288,THRN122,THN122/132,AW129/131", "adr_channel": "21762", "adr": "85", "channel": "2", "qualifier": "33", "lowBatt": "1", "measures" : [{"type" : "temperature", "value" : "-17.8", "unit" : "Celsius"}, {"type" : "hygrometry", "value" : "0", "unit" : "%"}]}}}'
+		ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-46", "floorNoise": "-105", "rfQuality": "10", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "4", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0x1A2D", "id_PHYMeaning": "THGR122/228/238/268,THGN122/123/132", "adr_channel": "63492", "adr": "248", "channel": "4", "qualifier": "32", "lowBatt": "0", "measures" : [{"type" : "temperature", "value" : "+20.3", "unit" : "Celsius"}, {"type" : "hygrometry", "value" : "41", "unit" : "%"}]}}}'
+		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-77", "floorNoise": "-100", "rfQuality": "5", "protocol": "5", "protocolMeaning": "OREGON", "infoType": "4", "frequency": "433920"},"infos": {"subType": "0", "id_PHY": "0xFA28", "id_PHYMeaning": "THGR810", "adr_channel": "64513", "adr": "252", "channel": "1", "qualifier": "48", "lowBatt": "0", "measures" : [{"type" : "temperature", "value" : "+21.0", "unit" : "Celsius"}, {"type" : "hygrometry", "value" : "35", "unit" : "%"}]}}}'
 	###########
 		#infotype5
 	###########
@@ -277,7 +280,7 @@ class BasePlugin:
 		###########
 		
 		
-		#ReadData(ReqRcv)
+		ReadData(ReqRcv)
 		global SerialConn
 		if (SerialConn.Connected() != True):
 			SerialConn.Connect()
@@ -555,7 +558,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
-def FreeUnit(self) :
+def FreeUnit() :
 	FreeUnit=""
 	for x in range(1,256):
 		Domoticz.Debug("FreeUnit - is device " + str(x) + " exist ?")
@@ -597,7 +600,7 @@ def DecodeInfoType0(DecData, infoType):
 						break
 		########### create device if not find ###############
 		if IsCreated == False and Parameters["Mode4"] == "True" :
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType),Options = Options)
 		elif IsCreated == True :
@@ -649,7 +652,7 @@ def DecodeInfoType1(DecData, infoType):
 						#No need to walk on the other devices
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True" :
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType),Options = Options)
 		elif IsCreated == True :
@@ -712,7 +715,7 @@ def DecodeInfoType2(DecData, infoType):
 							#No need to walk on the other devices
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), BatteryLevel = Battery, Options = Options)
@@ -738,7 +741,7 @@ def DecodeInfoType2(DecData, infoType):
 							#No need to walk on the other devices
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, Type=16, Switchtype=0, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0, sValue = "on", Options = Options)
 			elif IsCreated == True :
@@ -765,7 +768,7 @@ def DecodeInfoType2(DecData, infoType):
 							#No need to walk on the other devices
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name="Button 1 - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0", BatteryLevel = Battery, Options = Options)
 			elif IsCreated == True :
@@ -828,7 +831,7 @@ def DecodeInfoType3(DecData, infoType):
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				Domoticz.Debug("Create devices : " + str(x))
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Device(Name=" RTS - " + str(id),  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue = 1,sValue = str(level),Options = Options)
@@ -863,7 +866,7 @@ def DecodeInfoType3(DecData, infoType):
 							#No need to walk on the other devices
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Device(Name=" RTS - " + str(id),  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue = 0,sValue = "0",Options = Options)
@@ -925,7 +928,7 @@ def DecodeInfoType4(DecData, infoType):
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][1]
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=80, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temp), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
@@ -955,7 +958,7 @@ def DecodeInfoType4(DecData, infoType):
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][2]
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=81, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1", SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
@@ -986,13 +989,13 @@ def DecodeInfoType4(DecData, infoType):
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][0]
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel + ' (channel ' + channel + ')', Unit=nbrdevices, Type=82, Subtype=subType, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level, Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level)
-	except:
-		Domoticz.Log("Error while decoding Infotype4 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype4 frame" + repr(e))
 		return
 
 def DecodeInfoType5(DecData, infoType):
@@ -1042,7 +1045,7 @@ def DecodeInfoType5(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break;
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp - " + adr_channel, Unit=nbrdevices, Type=80, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temp),Options = Options)
 		elif IsCreated == True :
@@ -1068,7 +1071,7 @@ def DecodeInfoType5(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Hygro - " + adr_channel, Unit=nbrdevices, Type=81, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = int(hygro),sValue = "1",Options = Options)
 		elif IsCreated == True :
@@ -1094,7 +1097,7 @@ def DecodeInfoType5(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Pressure - " + adr_channel, Unit=nbrdevices, Type=243, Subtype=26, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(pressure),Options = Options)
 		elif IsCreated == True :
@@ -1120,7 +1123,7 @@ def DecodeInfoType5(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel, Unit=nbrdevices, Type=82, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygro),Options = Options)
 		elif IsCreated == True :
@@ -1146,7 +1149,7 @@ def DecodeInfoType5(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel, Unit=nbrdevices, Type=84, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygropress),Options = Options)
 		elif IsCreated == True :
@@ -1213,7 +1216,7 @@ def DecodeInfoType6(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True" :
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Wind - " + adr_channel, Unit=nbrdevices, Type=86, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Wind),Options = Options)
 		elif IsCreated == True :
@@ -1255,7 +1258,7 @@ def DecodeInfoType7(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="UV - " + adr_channel, Unit=nbrdevices, Type=80, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(int(UV)/10) + ';0',Options = Options)
 		elif IsCreated == True :
@@ -1303,7 +1306,7 @@ def DecodeInfoType8(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Power & Energie - " + adr_channel, Unit=nbrdevices, Type=243, Subtype =29, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Power + ';' + Energy),Options = Options)
 		elif IsCreated == True :
@@ -1330,7 +1333,7 @@ def DecodeInfoType8(DecData, infoType):
 							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name="P1 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(P1),Options = Options)
 			elif IsCreated == True :
@@ -1357,7 +1360,7 @@ def DecodeInfoType8(DecData, infoType):
 							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name="P2 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(P2),Options = Options)
 			elif IsCreated == True :
@@ -1384,7 +1387,7 @@ def DecodeInfoType8(DecData, infoType):
 							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-					nbrdevices=FreeUnit(self)
+					nbrdevices=FreeUnit()
 					Domoticz.Device(Name="P3 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
 					Devices[nbrdevices].Update(nValue = 0,sValue = str(P3),Options = Options)
 			elif IsCreated == True :
@@ -1433,7 +1436,7 @@ def DecodeInfoType9(DecData, infoType):
 						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
-			nbrdevices=FreeUnit(self)
+			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Rain - " + adr_channel, Unit=nbrdevices, Type=85, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain),Options = Options)
 		elif IsCreated == True :
@@ -1502,7 +1505,7 @@ def DecodeInfoType10(DecData, infoType):
 					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 					break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 			elif IsCreated == True :
@@ -1522,7 +1525,7 @@ def DecodeInfoType10(DecData, infoType):
 					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 					break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(state), Options = Options)
 			elif IsCreated == True :
@@ -1568,7 +1571,7 @@ def DecodeInfoType11(DecData, infoType):
 							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 							break
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "||||", "LevelNames": "Off|Alarm|Tamper", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
@@ -1600,7 +1603,7 @@ def DecodeInfoType11(DecData, infoType):
 							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 							break;
 			if IsCreated == False and Parameters["Mode4"] == "True":
-				nbrdevices=FreeUnit(self)
+				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 			elif IsCreated == True :
