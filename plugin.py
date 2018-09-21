@@ -484,7 +484,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 
 	if infoType == "0" and  protocol == "PARROT":
 		id=Options['id']
-		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + id
+		lineinput='ZIA++' + str(Command.upper()) + " " + protocol + " " + id
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		if Command == "On":
 			Devices[Unit].Update(nValue =1,sValue = "on")
