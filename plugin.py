@@ -203,7 +203,7 @@ class BasePlugin:
 		global isConnected
 		if (Status == 0):
 			isConnected = True
-			Domoticz.Log("Connected successfully to: "+Parameters["SerialPort"])
+			Domoticz.Status("Connected successfully to: "+Parameters["SerialPort"])
 			# Run RFPlayer configuration
 			RFpConf()
 		else:
