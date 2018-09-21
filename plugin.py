@@ -42,8 +42,14 @@
 		<param field="Mode3" label="Area (For X2D)" width="200px"/>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
-				<option label="True" value="Debug"/>
-				<option label="False" value="Normal"  default="true" />
+				<option label="None" value="0"  default="true" />
+				<option label="Python Only" value="2"/>
+				<option label="Basic Debugging" value="62"/>
+				<option label="Basic+Messages" value="126"/>
+				<option label="Connections Only" value="16"/>
+				<option label="Connections+Python" value="18"/>
+				<option label="Connections+Queue" value="144"/>
+				<option label="All" value="-1"/>
 			</options>
 		</param>
 	</params>
@@ -79,8 +85,9 @@ class BasePlugin:
 	def onStart(self):
 		global ReqRcv
 		global SerialConn
-		if Parameters["Mode6"] == "Debug":
-			Domoticz.Debugging(1)
+		if Parameters["Mode6"] != "0":
+			Domoticz.Debugging(int(Parameters["Mode6"]))
+			DumpConfigToLog()
 			with open(Parameters["HomeFolder"]+"Debug.txt", "wt") as text_file:
 				print("Started recording message for debug.", file=text_file)
 			#Domoticz.Log("Debugger started, use 'telnet 0.0.0.0 4444' to connect")
@@ -178,7 +185,6 @@ class BasePlugin:
 					Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=stype).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
 			Domoticz.Log("Plugin has " + str(len(Devices)) + " devices associated with it.")
-		DumpConfigToLog()
 		#Domoticz.Transport("Serial", Parameters["SerialPort"], Baud=115200)
 		#Domoticz.Protocol("None")  # None,XML,JSON,HTTP
 		#Domoticz.Connect()
@@ -369,6 +375,7 @@ def ReadData(ReqRcv):
 	##############################################################################################################
 	# decoding data from RfPlayer 
 	##############################################################################################################
+	Domoticz.Debug("ReadData - " + ReqRcv)
 	ReqRcv=ReqRcv.replace("ZIA33", "")
 	try:
 		DecData = json.loads(ReqRcv)
