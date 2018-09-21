@@ -131,7 +131,7 @@ class BasePlugin:
 				stype=0
 			if infoType == "3" and Parameters["Mode5"] =="11":
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "0", "LevelActions": "|||||", "LevelNames": "Off/Down|My|On/Up|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
-				18
+				stype=18
 			if infoType == "3" and Parameters["Mode5"] =="14":
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				stype=18
