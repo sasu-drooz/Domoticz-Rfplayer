@@ -550,7 +550,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 		
 	if infoType == "10" :
-		Area=Options['area']
+		Area=Options['id']
 		if Level == 0 : # Off
 			lineinput="ZIA++ OFF X2DELEC A"+Area + " %4"
 		if Level == 10 : # HG
