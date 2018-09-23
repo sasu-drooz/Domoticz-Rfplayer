@@ -39,7 +39,6 @@
 			</options>
 		</param>
 		<param field="Mode2" label="devices ID" width="200px"/>
-		<param field="Mode3" label="Area (For X2D)" width="200px"/>
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="None" value="0"  default="true" />
@@ -107,7 +106,6 @@ class BasePlugin:
 			if Parameters["Mode5"] =="13": protocol="11" #PARROT
 			if Parameters["Mode5"] =="16": protocol="10" #KD101
 			id = Parameters["Mode2"]
-			Area = Parameters["Mode3"]
 			if Parameters["Mode5"] == "4" or Parameters["Mode5"] == "5" or Parameters["Mode5"] == "13" :
 				infoType="0"
 			if Parameters["Mode5"] == "3" or Parameters["Mode5"] == "12" or Parameters["Mode5"] == "16" :
@@ -136,28 +134,28 @@ class BasePlugin:
 				Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="6":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "function": "2", "protocol": str(protocol), "frequency":"433920", "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="61":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "function": "1", "protocol": str(protocol), "frequency":"433920"}
 				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="62":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "function": "12", "protocol": str(protocol), "frequency":"433920"}
 				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="63":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "frequency":"433920"}
+				Options = {"infoType":infoType, "id": str(id), "function": "26", "protocol": str(protocol), "frequency":"433920"}
 				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="7":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "2", "protocol": str(protocol), "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+				Options = {"infoType":infoType, "id": str(id), "function": "2", "protocol": str(protocol), "frequency":"868950", "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 				stype=18
 			if infoType == "10" and Parameters["Mode5"] =="71":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "1", "protocol": str(protocol), "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "function": "1", "protocol": str(protocol), "frequency":"868950"}
 				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="72":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "12", "protocol": str(protocol), "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "function": "12", "protocol": str(protocol), "frequency":"868950"}
 				stype=0
 			if infoType == "10" and Parameters["Mode5"] =="73":
-				Options = {"infoType":infoType, "id": str(id), "area": str(Area), "function": "26", "protocol": str(protocol), "frequency":"868950"}
+				Options = {"infoType":infoType, "id": str(id), "function": "26", "protocol": str(protocol), "frequency":"868950"}
 				stype=0
 			if infoType == "11" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
@@ -169,7 +167,7 @@ class BasePlugin:
 			#########check if devices exist ####################
 			for x in Devices:
 				DOptions = Devices[x].Options
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'area', 'function')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'area', 'function')}:
+				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'function')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'function')}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -180,7 +178,7 @@ class BasePlugin:
 				if infoType =="3" :
 					Domoticz.Device(Name="RTS - " + Parameters["Mode2"],  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				elif infoType=="10" and Options['function']=="2" :
-					Domoticz.Device(Name="X2DELEC Switch - Area " + Options['area'],  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
+					Domoticz.Device(Name="X2DELEC Switch - id " + Options['id'],  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				else :
 					Domoticz.Device(Name="Manual Switch - " + Parameters["Mode2"], Unit=nbrdevices, Type=16, Switchtype=stype).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = "0",Options = Options)
@@ -550,21 +548,21 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 		
 	if infoType == "10" :
-		Area=Options['id']
+		id=Options['id']
 		if Level == 0 : # Off
-			lineinput="ZIA++ OFF X2DELEC "+Area + " %4"
+			lineinput="ZIA++ OFF X2DELEC "+id + " %4"
 		if Level == 10 : # HG
-			lineinput="ZIA++ OFF X2DELEC "+Area + " %5"
+			lineinput="ZIA++ OFF X2DELEC "+id + " %5"
 		if Level == 20 : # Eco
-			lineinput="ZIA++ OFF X2DELEC "+Area + " %0"
+			lineinput="ZIA++ OFF X2DELEC "+id + " %0"
 		if Level == 30 : # confort-2
-			lineinput="ZIA++ OFF X2DELEC "+Area + " %1"
+			lineinput="ZIA++ OFF X2DELEC "+id + " %1"
 		if Level == 40 : # confort-1
-			lineinput="ZIA++ OFF X2DELEC "+Area + " %2"
+			lineinput="ZIA++ OFF X2DELEC "+id + " %2"
 		if Level == 50 : # confort
-			lineinput="ZIA++ ON X2DELEC "+Area + " %3"
+			lineinput="ZIA++ ON X2DELEC "+id + " %3"
 		if Level == 60 : # assoc
-			lineinput="ZIA++ ASSOC X2DELEC "+Area
+			lineinput="ZIA++ ASSOC X2DELEC "+id
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
@@ -581,6 +579,8 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0,sValue = str(Level))
 				
+	Domoticz.Debug("SendtoRfplayer - command : " + lineinput)
+	
 def FreeUnit() :
 	FreeUnit=""
 	for x in range(1,256):
@@ -1516,7 +1516,7 @@ def DecodeInfoType10(DecData, infoType):
 				status = 70
 			if state == "8": #CENTRALISED
 				status = 80
-			Options = {"infoType":infoType, "id": str(idd), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				DOptions = Devices[x].Options
@@ -1535,13 +1535,13 @@ def DecodeInfoType10(DecData, infoType):
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status))
 	##############################################################################################################
 		else :
-			Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
+			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			for x in Devices:
 				Domoticz.Debug("scanning devices: "+repr(x))
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'area')}:
+				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType'} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
