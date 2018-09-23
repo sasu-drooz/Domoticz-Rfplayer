@@ -552,19 +552,19 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if infoType == "10" :
 		Area=Options['id']
 		if Level == 0 : # Off
-			lineinput="ZIA++ OFF X2DELEC A"+Area + " %4"
+			lineinput="ZIA++ OFF X2DELEC "+Area + " %4"
 		if Level == 10 : # HG
-			lineinput="ZIA++ OFF X2DELEC A"+Area + " %5"
+			lineinput="ZIA++ OFF X2DELEC "+Area + " %5"
 		if Level == 20 : # Eco
-			lineinput="ZIA++ OFF X2DELEC A"+Area + " %0"
+			lineinput="ZIA++ OFF X2DELEC "+Area + " %0"
 		if Level == 30 : # confort-2
-			lineinput="ZIA++ OFF X2DELEC A"+Area + " %1"
+			lineinput="ZIA++ OFF X2DELEC "+Area + " %1"
 		if Level == 40 : # confort-1
-			lineinput="ZIA++ OFF X2DELEC A"+Area + " %2"
+			lineinput="ZIA++ OFF X2DELEC "+Area + " %2"
 		if Level == 50 : # confort
-			lineinput="ZIA++ ON X2DELEC A"+Area + " %3"
+			lineinput="ZIA++ ON X2DELEC "+Area + " %3"
 		if Level == 60 : # assoc
-			lineinput="ZIA++ ASSOC X2DELEC A"+Area
+			lineinput="ZIA++ ASSOC X2DELEC "+Area
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 		Devices[Unit].Update(nValue =0,sValue = str(Level))
 
