@@ -1541,7 +1541,7 @@ def DecodeInfoType10(DecData, infoType):
 				Domoticz.Debug("scanning devices: "+repr(x))
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType'} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
+				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
