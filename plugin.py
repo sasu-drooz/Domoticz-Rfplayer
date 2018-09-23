@@ -1282,7 +1282,7 @@ def DecodeInfoType7(DecData, infoType):
 						break
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
-			Domoticz.Device(Name="UV - " + adr_channel, Unit=nbrdevices, TypeName"UV").Create()
+			Domoticz.Device(Name="UV - " + adr_channel, Unit=nbrdevices, TypeName="UV").Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(int(UV)/10) + ';0',Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(int(UV)/10) + ';0')
