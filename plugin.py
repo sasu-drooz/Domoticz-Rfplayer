@@ -62,7 +62,7 @@ global ReqRcv
 global InfoType4SubTypes
 
 InfoType4SubTypes = {}
-#                             T/H T  H
+#							 T/H T  H
 InfoType4SubTypes['0x1A2D'] = (1, 1, 1) # THGR122/228/238/268, THGN122/123/132 Thermo+hygro V2
 InfoType4SubTypes['0xCA2C'] = (4, 1, 1) # THGR328 Thermo+hygro V2
 InfoType4SubTypes['0x0ACC'] = (3, 1, 1) # RTGR328 Thermo+hygro V2
@@ -347,7 +347,7 @@ def DumpConfigToLog():
 		Domoticz.Debug("Device nValue:	" + str(Devices[x].nValue))
 		Domoticz.Debug("Device sValue:   '" + Devices[x].sValue + "'")
 		Domoticz.Debug("Device LastLevel: " + str(Devices[x].LastLevel))
-		Domoticz.Debug("Options:         '" + str(Devices[x].Options) + "'")
+		Domoticz.Debug("Options:		 '" + str(Devices[x].Options) + "'")
 	return
 
 def UpdateDevice(Unit, nValue, sValue, Image, SignalLevel, BatteryLevel):
