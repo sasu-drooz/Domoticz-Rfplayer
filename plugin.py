@@ -1461,9 +1461,9 @@ def DecodeInfoType9(DecData, infoType):
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Rain - " + adr_channel, Unit=nbrdevices, Type=85, Switchtype=0).Create()
-			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain),Options = Options)
+			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain),Options = Options)
 		elif IsCreated == True :
-			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain))
+			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain))
 	except:
 		Domoticz.Log("Error while decoding Infotype9 frame")
 		return
