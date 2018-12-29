@@ -1518,10 +1518,11 @@ def DecodeInfoType10(DecData, infoType):
 				status = 80
 			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
+			filters = ('id', 'protocol', 'infoType', 'function')
 			for x in Devices:
 				DOptions = Devices[x].Options
-				Domoticz.Debug("scanning devices: "+repr(x) + repr(DOptions))
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
+				Domoticz.Debug("scanning devices: " + repr(x) + repr(DOptions))
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1532,16 +1533,18 @@ def DecodeInfoType10(DecData, infoType):
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 			elif IsCreated == True :
-				Devices[nbrdevices].Update(nValue =0,sValue = str(status))
+				svalue = str(state)
+				if Devices[nbrdevices].sValue != svalue:
+					Devices[nbrdevices].Update(nValue =0,sValue = svalue)
 	##############################################################################################################
 		else :
 			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 			Domoticz.Debug("Options to find or set : " + str(Options))
+			filters = ('id', 'protocol', 'infoType', 'function')
 			for x in Devices:
-				Domoticz.Debug("scanning devices: "+repr(x))
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType')}:
+				Domoticz.Debug("scanning devices: " + repr(x) + repr(DOptions))
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exist. Unit=" + str(x))
@@ -1552,7 +1555,9 @@ def DecodeInfoType10(DecData, infoType):
 				Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(state), Options = Options)
 			elif IsCreated == True :
-				Devices[nbrdevices].Update(nValue =0,sValue = str(state))
+				svalue = str(state)
+				if Devices[nbrdevices].sValue != svalue:
+					Devices[nbrdevices].Update(nValue =0,sValue = svalue)
 	except Exception as e:
 		Domoticz.Log("Error while decoding Infotype10 frame: " + repr(e))
 		return
