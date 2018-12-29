@@ -1531,9 +1531,9 @@ def DecodeInfoType10(DecData, infoType):
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
-				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
+				Devices[nbrdevices].Update(nValue =0, sValue = str(status), Options = Options)
 			elif IsCreated == True :
-				svalue = str(state)
+				svalue = str(status)
 				if Devices[nbrdevices].sValue != svalue:
 					Devices[nbrdevices].Update(nValue =0,sValue = svalue)
 	##############################################################################################################
