@@ -1535,7 +1535,7 @@ def DecodeInfoType10(DecData, infoType):
 				status = 70
 			if state == "8": #CENTRALISED
 				status = 80
-			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
+			Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency), "LevelActions": "|||||||||", "LevelNames": "Off|HG|Eco|Moderat|Medio|Comfort|Assoc", "LevelOffHidden": "False", "SelectorStyle": "0"}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			filters = ('id', 'protocol', 'infoType', 'function')
 			for x in Devices:
@@ -1558,7 +1558,7 @@ def DecodeInfoType10(DecData, infoType):
 					Devices[nbrdevices].Update(nValue = nvalue,sValue = svalue)
 	##############################################################################################################
 		else :
-			Options = {"infoType":infoType, "id": str(id), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
+			Options = {"infoType":infoType, "id": str(id), "area": str(area), "function": str(function), "protocol": str(protocol), "subType": str(SubType), "frequency": str(frequency)}
 			Domoticz.Debug("Options to find or set : " + str(Options))
 			filters = ('id', 'protocol', 'infoType', 'function')
 			for x in Devices:
