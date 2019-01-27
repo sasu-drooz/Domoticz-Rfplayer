@@ -631,7 +631,7 @@ def DecodeInfoType0(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -648,8 +648,8 @@ def DecodeInfoType0(DecData, infoType):
 		elif IsCreated == True :
 		############ update device if found###################
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
-	except:
-		Domoticz.Log("Error while decoding Infotype0 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype0 frame " + repr(e))
 		return
 
 def DecodeInfoType1(DecData, infoType):
@@ -683,7 +683,7 @@ def DecodeInfoType1(DecData, infoType):
 			DOptions = Devices[x].Options
 			Domoticz.Debug("DOptions : " + str(DOptions))
 	#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -700,8 +700,8 @@ def DecodeInfoType1(DecData, infoType):
 		elif IsCreated == True :
 			Domoticz.Debug("update devices : " + str(x))
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
-	except:
-		Domoticz.Log("Error while decoding Infotype1 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype1 frame " + repr(e))
 		return
 
 def DecodeInfoType2(DecData, infoType):
@@ -746,7 +746,7 @@ def DecodeInfoType2(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -772,7 +772,7 @@ def DecodeInfoType2(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -799,7 +799,7 @@ def DecodeInfoType2(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -861,7 +861,7 @@ def DecodeInfoType3(DecData, infoType):
 				DOptions = Devices[x].Options
 				Domoticz.Debug("DOptions : " + str(DOptions))
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -897,7 +897,7 @@ def DecodeInfoType3(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -917,8 +917,8 @@ def DecodeInfoType3(DecData, infoType):
 				#Devices[nbrdevices].Update(nValue = 1,sValue = "0")
 		else :
 			Domoticz.Log("Unknow SubType - please send log to dev team")
-	except:
-		Domoticz.Log("Error while decoding Infotype3 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype3 frame " + repr(e))
 		return
 
 def DecodeInfoType4(DecData, infoType):
@@ -956,7 +956,7 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
@@ -986,7 +986,7 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
@@ -1017,7 +1017,7 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
@@ -1037,7 +1037,7 @@ def DecodeInfoType4(DecData, infoType):
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level)
 	except Exception as e:
-		Domoticz.Log("Error while decoding Infotype4 frame" + repr(e))
+		Domoticz.Log("Error while decoding Infotype4 frame " + repr(e))
 		return
 
 def DecodeInfoType5(DecData, infoType):
@@ -1077,7 +1077,7 @@ def DecodeInfoType5(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1103,7 +1103,7 @@ def DecodeInfoType5(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1129,7 +1129,7 @@ def DecodeInfoType5(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1155,7 +1155,7 @@ def DecodeInfoType5(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1181,7 +1181,7 @@ def DecodeInfoType5(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1196,8 +1196,8 @@ def DecodeInfoType5(DecData, infoType):
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygropress),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygropress))
-	except:
-		Domoticz.Log("Error while decoding Infotype5 frame")
+	except  Exception as e:
+		Domoticz.Log("Error while decoding Infotype5 frame " + repr(e))
 		return
 
 def DecodeInfoType6(DecData, infoType):
@@ -1248,7 +1248,7 @@ def DecodeInfoType6(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1263,8 +1263,8 @@ def DecodeInfoType6(DecData, infoType):
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Wind),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Wind))
-	except:
-		Domoticz.Log("Error while decoding Infotype6 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype6 frame " + repr(e))
 		return
 
 def DecodeInfoType7(DecData, infoType):
@@ -1290,7 +1290,7 @@ def DecodeInfoType7(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1338,7 +1338,7 @@ def DecodeInfoType8(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1365,7 +1365,7 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -1392,7 +1392,7 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -1419,7 +1419,7 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -1434,8 +1434,8 @@ def DecodeInfoType8(DecData, infoType):
 					Devices[nbrdevices].Update(nValue = 0,sValue = str(P3),Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(P3))
-	except:
-		Domoticz.Log("Error while decoding Infotype8 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype8 frame " + repr(e))
 		return
 
 def DecodeInfoType9(DecData, infoType):
@@ -1468,7 +1468,7 @@ def DecodeInfoType9(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
+			if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 				if DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
@@ -1483,8 +1483,8 @@ def DecodeInfoType9(DecData, infoType):
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain))
-	except:
-		Domoticz.Log("Error while decoding Infotype9 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype9 frame " + repr(e))
 		return
 
 def DecodeInfoType10(DecData, infoType):
@@ -1610,7 +1610,7 @@ def DecodeInfoType11(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -1642,7 +1642,7 @@ def DecodeInfoType11(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
+				if  "protocol" in DOptions and DOptions["protocol"] == Options["protocol"] :
 					if DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
@@ -1657,7 +1657,7 @@ def DecodeInfoType11(DecData, infoType):
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status))
-	except:
-		Domoticz.Log("Error while decoding Infotype11 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype11 frame " + repr(e))
 		return
 
