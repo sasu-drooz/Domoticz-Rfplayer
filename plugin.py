@@ -165,10 +165,11 @@ class BasePlugin:
 			x=0
 			nbrdevices=1
 			Domoticz.Debug("Options to find or set : " + str(Options))
+			filters = ('id', 'protocol', 'infoType', 'function')
 			#########check if devices exist ####################
 			for x in Devices:
 				DOptions = Devices[x].Options
-				if {k: DOptions.get(k, None) for k in ('id', 'protocol', 'infoType', 'function')} == {k: Options.get(k, None) for k in ('id', 'protocol', 'infoType', 'function')}:
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
 					IsCreated = True
 					nbrdevices=x
 					Domoticz.Log("Devices already exists. Unit=" + str(x))
@@ -626,20 +627,18 @@ def DecodeInfoType0(DecData, infoType):
 		
 		Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol)}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		#########check if devices exist ####################
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Device already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Device already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		########### create device if not find ###############
 		if IsCreated == False and Parameters["Mode4"] == "True" :
 			nbrdevices=FreeUnit()
@@ -648,8 +647,8 @@ def DecodeInfoType0(DecData, infoType):
 		elif IsCreated == True :
 		############ update device if found###################
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
-	except:
-		Domoticz.Log("Error while decoding Infotype0 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype0 frame " + repr(e))
 		return
 
 def DecodeInfoType1(DecData, infoType):
@@ -678,21 +677,18 @@ def DecodeInfoType1(DecData, infoType):
 		#########################################################################################
 		Options = {"infoType":infoType, "id": str(id), "id_lsb": str(hex(int(idd,2)))[2:], "id_msb": str(int(Unit,2)+1), "protocol": str(protocol)}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
 			Domoticz.Debug("DOptions : " + str(DOptions))
-	#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		if IsCreated == False and Parameters["Mode4"] == "True" :
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
@@ -700,8 +696,8 @@ def DecodeInfoType1(DecData, infoType):
 		elif IsCreated == True :
 			Domoticz.Debug("update devices : " + str(x))
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
-	except:
-		Domoticz.Log("Error while decoding Infotype1 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype1 frame " + repr(e))
 		return
 
 def DecodeInfoType2(DecData, infoType):
@@ -713,6 +709,7 @@ def DecodeInfoType2(DecData, infoType):
 	frequency = DecData['frame']['header']['frequency']
 	SubType = DecData['frame']['infos']['subType']
 	Domoticz.Debug("Protocol : " + str(protocol))
+	filters = ('id', 'protocol', 'infoType', 'function')
 	if protocol == "2":
 		id= DecData['frame']['infos']['id']
 		qualifier = DecData['frame']['infos']['qualifier']
@@ -745,17 +742,13 @@ def DecodeInfoType2(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			#Options = {"LevelActions": "||||", "LevelNames": "Off|Tamper|Alarm|Tamper+Alarm", "LevelOffHidden": "False", "SelectorStyle": "0"}
@@ -770,18 +763,13 @@ def DecodeInfoType2(DecData, infoType):
 		Domoticz.Debug("Options to find or set : " + str(Options))
 		for x in Devices:
 			#JJE - start
-			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, Type=16, Switchtype=0, Options=Options).Create()
@@ -798,17 +786,13 @@ def DecodeInfoType2(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Button 1 - " + id, Unit=nbrdevices, Type=16, Switchtype=0).Create()
@@ -832,6 +816,7 @@ def DecodeInfoType3(DecData, infoType):
 		Domoticz.Debug("id : " + id)
 		qualifier = DecData['frame']['infos']['qualifier']
 		Domoticz.Debug("protocol : " + str(protocol) + " - SubType : " + str(SubType) +" - id : " + str(id) + " - Qualifier : " + str(qualifier))
+		filters = ('id', 'protocol', 'infoType', 'function')
 #		if len(str(id))== 8 :
 #			Domoticz.Debug("len id = 8")
 #			idb= bin(int(id))[2:]
@@ -860,17 +845,13 @@ def DecodeInfoType3(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 				Domoticz.Debug("DOptions : " + str(DOptions))
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							#No need to walk on the other devices
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+					#No need to walk on the other devices
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				Domoticz.Debug("Create devices : " + str(x))
 				nbrdevices=FreeUnit()
@@ -896,17 +877,13 @@ def DecodeInfoType3(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							#No need to walk on the other devices
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+					#No need to walk on the other devices
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "||||", "LevelNames": "Off|Left button|Right button", "LevelOffHidden": "False", "SelectorStyle": "0"}
@@ -917,8 +894,8 @@ def DecodeInfoType3(DecData, infoType):
 				#Devices[nbrdevices].Update(nValue = 1,sValue = "0")
 		else :
 			Domoticz.Log("Unknow SubType - please send log to dev team")
-	except:
-		Domoticz.Log("Error while decoding Infotype3 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype3 frame " + repr(e))
 		return
 
 def DecodeInfoType4(DecData, infoType):
@@ -928,6 +905,7 @@ def DecodeInfoType4(DecData, infoType):
 		adr_channel = DecData['frame']['infos']['adr_channel']
 		channel = DecData['frame']['infos']['channel']
 		qualifier = DecData['frame']['infos']['qualifier']
+		filters = ('id', 'adr_channel', 'protocol', 'infoType', 'sensorType')
 		
 		try:
 			lowBatt = DecData['frame']['infos']['lowBatt']
@@ -955,17 +933,13 @@ def DecodeInfoType4(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
-					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break;
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		subType = 0
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][1]
@@ -985,17 +959,13 @@ def DecodeInfoType4(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
-					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						#No need to walk on the other devices
-						break;
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+				#No need to walk on the other devices
 		subType = 0
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][2]
@@ -1016,17 +986,13 @@ def DecodeInfoType4(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
-					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						# No need to walk on the other devices
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+					# No need to walk on the other devices
 		subType = 0
 		if id_PHY in InfoType4SubTypes:
 			subType = InfoType4SubTypes[id_PHY][0]
@@ -1037,7 +1003,7 @@ def DecodeInfoType4(DecData, infoType):
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 1,sValue = str(temphygro), SignalLevel=signal_level , BatteryLevel=battery_level)
 	except Exception as e:
-		Domoticz.Log("Error while decoding Infotype4 frame" + repr(e))
+		Domoticz.Log("Error while decoding Infotype4 frame " + repr(e))
 		return
 
 def DecodeInfoType5(DecData, infoType):
@@ -1050,6 +1016,7 @@ def DecodeInfoType5(DecData, infoType):
 		id_PHY = DecData['frame']['infos']['id_PHY']
 		adr_channel = DecData['frame']['infos']['adr_channel']
 		qualifier = DecData['frame']['infos']['qualifier']
+		filters = ('id', 'protocol', 'infoType', 'function')
 		try:
 			lowBatt = DecData['frame']['infos']['lowBatt']
 		except IndexError:
@@ -1076,16 +1043,12 @@ def DecodeInfoType5(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break;
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp - " + adr_channel, Unit=nbrdevices, Type=80, Switchtype=0).Create()
@@ -1102,16 +1065,12 @@ def DecodeInfoType5(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Hygro - " + adr_channel, Unit=nbrdevices, Type=81, Switchtype=0).Create()
@@ -1128,16 +1087,12 @@ def DecodeInfoType5(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Pressure - " + adr_channel, Unit=nbrdevices, Type=243, Subtype=26, Switchtype=0).Create()
@@ -1154,16 +1109,12 @@ def DecodeInfoType5(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel, Unit=nbrdevices, Type=82, Switchtype=0).Create()
@@ -1180,24 +1131,20 @@ def DecodeInfoType5(DecData, infoType):
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Temp/Hygro - " + adr_channel, Unit=nbrdevices, Type=84, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygropress),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(temphygropress))
-	except:
-		Domoticz.Log("Error while decoding Infotype5 frame")
+	except  Exception as e:
+		Domoticz.Log("Error while decoding Infotype5 frame " + repr(e))
 		return
 
 def DecodeInfoType6(DecData, infoType):
@@ -1244,27 +1191,24 @@ def DecodeInfoType6(DecData, infoType):
 		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
 		Options = {"infoType":infoType, "id": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "Wind" : "1"}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True" :
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Wind - " + adr_channel, Unit=nbrdevices, Type=86, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Wind),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(Wind))
-	except:
-		Domoticz.Log("Error while decoding Infotype6 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype6 frame " + repr(e))
 		return
 
 def DecodeInfoType7(DecData, infoType):
@@ -1286,19 +1230,16 @@ def DecodeInfoType7(DecData, infoType):
 		
 		Options = {"infoType":infoType, "id": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "UV" : "1"}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="UV - " + adr_channel, Unit=nbrdevices, TypeName="UV").Create()
@@ -1334,19 +1275,16 @@ def DecodeInfoType8(DecData, infoType):
 		##################################################################################################################################
 		Options = {"infoType":infoType, "id": str(id_PHY), "id": str(adr_channel), "protocol": str(protocol), "Power&Energie" : "1"}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Power & Energie - " + adr_channel, Unit=nbrdevices, Type=243, Subtype =29, Switchtype=0).Create()
@@ -1364,16 +1302,12 @@ def DecodeInfoType8(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				Domoticz.Device(Name="P1 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
@@ -1391,16 +1325,12 @@ def DecodeInfoType8(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				Domoticz.Device(Name="P2 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
@@ -1418,24 +1348,20 @@ def DecodeInfoType8(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			if IsCreated == False and Parameters["Mode4"] == "True":
 					nbrdevices=FreeUnit()
 					Domoticz.Device(Name="P3 - " + adr_channel, Unit=nbrdevices, Type=248, Switchtype=0).Create()
 					Devices[nbrdevices].Update(nValue = 0,sValue = str(P3),Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue = 0,sValue = str(P3))
-	except:
-		Domoticz.Log("Error while decoding Infotype8 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype8 frame " + repr(e))
 		return
 
 def DecodeInfoType9(DecData, infoType):
@@ -1464,27 +1390,24 @@ def DecodeInfoType9(DecData, infoType):
 		
 		Options = {"infoType":infoType, "id": str(id_PHY), "adr_channel": str(adr_channel), "protocol": str(protocol), "Temp" : "1"}
 		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
 		for x in Devices:
 			#JJE - start
 			DOptions = Devices[x].Options
-#				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
-					if DOptions["id"] == Options["id"] :
-					#JJE - end
-						IsCreated = True
-						nbrdevices=x
-						Domoticz.Log("Devices already exists. Unit=" + str(x))
-						Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-						break
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Devices already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		if IsCreated == False and Parameters["Mode4"] == "True":
 			nbrdevices=FreeUnit()
 			Domoticz.Device(Name="Rain - " + adr_channel, Unit=nbrdevices, Type=85, Switchtype=0).Create()
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain),Options = Options)
 		elif IsCreated == True :
 			Devices[nbrdevices].Update(nValue = 0,sValue = str(CurrentRain) + ";" + str(TotalRain))
-	except:
-		Domoticz.Log("Error while decoding Infotype9 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype9 frame " + repr(e))
 		return
 
 def DecodeInfoType10(DecData, infoType):
@@ -1592,6 +1515,7 @@ def DecodeInfoType11(DecData, infoType):
 		protocol = DecData['frame']['header']['protocol']
 		SubType = DecData['frame']['infos']['subType']
 		frequency=DecData['frame']['header']['frequency']
+		filters = ('id', 'protocol', 'infoType', 'function')
 		##############################################################################################################
 		if SubType == "0" : # Detector/sensor
 			id = DecData['frame']['infos']['id']
@@ -1609,16 +1533,12 @@ def DecodeInfoType11(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							break
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				#Options = {"LevelActions": "||||", "LevelNames": "Off|Alarm|Tamper", "LevelOffHidden": "False", "SelectorStyle": "0"}
@@ -1641,23 +1561,19 @@ def DecodeInfoType11(DecData, infoType):
 			for x in Devices:
 				#JJE - start
 				DOptions = Devices[x].Options
-	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
-						if DOptions["id"] == Options["id"] :
-						#JJE - end
-							IsCreated = True
-							nbrdevices=x
-							Domoticz.Log("Devices already exists. Unit=" + str(x))
-							Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
-							break;
+				if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+					#JJE - end
+					IsCreated = True
+					nbrdevices=x
+					Domoticz.Log("Devices already exists. Unit=" + str(x))
+					Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 			if IsCreated == False and Parameters["Mode4"] == "True":
 				nbrdevices=FreeUnit()
 				Domoticz.Device(Name=protocol + " - " + id,  Unit=nbrdevices, TypeName="Selector Switch", Switchtype=18, Image=12, Options=Options).Create()
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status), Options = Options)
 			elif IsCreated == True :
 				Devices[nbrdevices].Update(nValue =0,sValue = str(status))
-	except:
-		Domoticz.Log("Error while decoding Infotype11 frame")
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype11 frame " + repr(e))
 		return
 
