@@ -1,7 +1,7 @@
 #		   ZiBlue RfPlayer Plugin
 #
 #		   Author:	 zaraki673, 2017
-#
+#    dev_JamAlert = infotype01 + infotype15
 #
 """
 <plugin key="RFplayer" name="RFplayer" author="zaraki673" version="1.1.0" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
