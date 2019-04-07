@@ -1,7 +1,7 @@
 #		   ZiBlue RfPlayer Plugin
 #
 #		   Author:	 zaraki673, 2017
-#    dev_JamAlert = infotype01 + infotype15
+#
 #
 """
 <plugin key="RFplayer" name="RFplayer" author="zaraki673" version="1.1.0" wikilink="http://www.domoticz.com/wiki/plugins/Ziblue-RFPlayer.html" externallink="http://rfplayer.com/">
@@ -279,7 +279,7 @@ class BasePlugin:
 		#OK ==>  protocol = 3
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-66", "floorNoise": "-106", "rfQuality": "10", "protocol": "3", "protocolMeaning": "BLYSS", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "256292321", "qualifier": "0"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-84", "floorNoise": "-106", "rfQuality": "5", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "868950"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "2039708784", "qualifier": "0", "qualifierMeaning": { "flags": []}}}}'
-		###########
+	###########
 		#infotype3 RTS Subtype0 ==> ok  // 
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-64", "floorNoise": "-103", "rfQuality": "9", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "14813191", "qualifier": "4", "qualifierMeaning": { "flags": ["My"]}}}}'
 	###########
@@ -300,7 +300,6 @@ class BasePlugin:
 		#infotype9
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-91", "floorNoise": "-107", "rfQuality": "4", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "9378633", "qualifier": "7", "qualifierMeaning": { "flags": ["Up/On"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-98", "floorNoise": "-107", "rfQuality": "2", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "1310793", "qualifier": "1", "qualifierMeaning": { "flags": ["Down/Off"]}}}}'
-
 	###########
 		#infotype10
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-74", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "1608089600", "area": "0", "qualifier": "36", "qualifierMeaning": { "flags": ["LowBatt"]}, "function": "12", "functionMeaning": "REGULATION", "state": "0", "stateMeaning": "OFF"}}}'
@@ -314,14 +313,13 @@ class BasePlugin:
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-75", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "1608089600", "area": "0", "qualifier": "36", "qualifierMeaning": { "flags": ["LowBatt"]}, "function": "12", "functionMeaning": "REGULATION", "state": "0", "stateMeaning": "OFF"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-76", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "3755245568", "area": "0", "qualifier": "32", "qualifierMeaning": { "flags": []}, "function": "2", "functionMeaning": "OPERATING MODE", "state": "7", "stateMeaning": "AUTO"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-93", "floorNoise": "-108", "rfQuality": "3", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "8", "subTypeMeaning": "REC BIDIR", "id": "3962161153", "area": "1", "qualifier": "32", "qualifierMeaning": { "flags": []}, "function": "2", "functionMeaning": "OPERATING MODE", "state": "7", "stateMeaning": "AUTO"}}}'
-
 	###########
 		#infotype11 ==> ok
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-75", "floorNoise": "-99", "rfQuality": "6", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "2888689920", "qualifier": "10", "qualifierMeaning": { "flags": ["Alarm","Supervisor/Alive"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-57", "floorNoise": "-106", "rfQuality": "10", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1112729857", "qualifier": "2", "qualifierMeaning": { "flags": ["Alarm"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-57", "floorNoise": "-106", "rfQuality": "10", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1112729857", "qualifier": "0", "qualifierMeaning": { "flags": []}}}}'
-		###########
-        
+	###########
+       
 	###########
 		#infotype15 ==> ok
 		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-79", "rfQuality": "2", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "3", "subTypeMeaning": "TOGGLE", "id": "3765014356", "qualifier": "1", "info": "6913", "infoMeaning": "EMITRBTN, 2.7V", "add0": "0", "add1": "0"}}}'
@@ -508,10 +506,8 @@ def ReadData(ReqRcv):
 		##############################################################################################################
 		if infoType == "15":
 			DecodeInfoType15(DecData, infoType)
-	
-	
-	
-	
+
+
 	except:
 		Domoticz.Log("Error while reading JSON Infotype")
 		Domoticz.Debug("Debug : Error Decoding/Reading  " + ReqRcv)
@@ -711,6 +707,14 @@ def DecodeInfoType01(DecData, infoType):
 		nbrdevices=0
 		protocol = DecData['frame']['header']['protocol']
 		SubType = DecData['frame']['infos']['subType']
+		ColorAlert=2
+		JamStatus=str("No Jamming Alert")
+		if int(SubType) == 0 :
+			ColorAlert = 1 ###green###
+			JamStatus=str("No Jamming")
+		if int(SubType) == 1 :
+			ColorAlert = 4	###red###
+			JamStatus=str("Jamming Alert")
 		id = DecData['frame']['infos']['id']
 		Domoticz.Debug("id : " + str(id))
 		
@@ -731,11 +735,11 @@ def DecodeInfoType01(DecData, infoType):
 		########### create device if not find ###############
 		if IsCreated == False and Parameters["Mode4"] == "True" :
 			nbrdevices=FreeUnit()
-			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=243, Subtype=22).Create()
-			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType),Options = Options)
+			Domoticz.Device(Name=protocol + " - " + "Jam'Alert", Unit=nbrdevices, Type=243, Subtype=22).Create()
+			Devices[nbrdevices].Update(nValue = int(ColorAlert), sValue = JamStatus, Options = Options)
 		elif IsCreated == True :
 		############ update device if found###################
-			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
+			Devices[nbrdevices].Update(nValue = int(ColorAlert), sValue = JamStatus)
 	except Exception as e:
 		Domoticz.Log("Error while decoding Infotype01 JAMALERT frame " + repr(e))
 		return
@@ -1472,7 +1476,7 @@ def DecodeInfoType9(DecData, infoType):
 		except IndexError:
 			TotalRain = "0"
 		try :
-			CurrentRain = DecData['frame']['infos']['measures'][1]['value']
+			CurrentRain = float(DecData['frame']['infos']['measures'][1]['value'])*100
 		except IndexError:
 			CurrentRain = "0"
 		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
