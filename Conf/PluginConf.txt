@@ -1,0 +1,4 @@
+{
+'Macdress':'AA:BB:CC:DD:EE:FF',
+'Repeater':'off'
+}
