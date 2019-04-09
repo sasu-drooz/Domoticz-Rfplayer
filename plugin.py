@@ -38,7 +38,8 @@
 				<option label="KD101" value="16"/>
 			</options>
 		</param>
-		<param field="Mode2" label="device ID" width="200px"/>
+		<param field="Mode2" label="devices ID" width="200px"/>
+
 		<param field="Mode6" label="Debug" width="75px">
 			<options>
 				<option label="None" value="0"  default="true" />
@@ -49,6 +50,21 @@
 				<option label="Connections+Python" value="18"/>
 				<option label="Connections+Queue" value="144"/>
 				<option label="All" value="-1"/>
+			</options>
+		</param>
+		<param field="Mode3" label="Jamalert" width="75px">
+			<options>
+				<option label="Disable" value="0"/>
+                                <option label="1" value="1"/>
+                                <option label="2" value="2"/>
+                                <option label="3" value="3"/>
+                                <option label="4" value="4"/>
+                                <option label="5" value="5"/>
+                                <option label="6" value="6"/>
+                                <option label="7" value="7" default="true"/>
+                                <option label="8" value="8"/>
+                                <option label="9" value="9"/>
+                                <option label="10" value="10"/>
 			</options>
 		</param>
 	</params>
@@ -160,7 +176,11 @@ class BasePlugin:
 				stype=0
 			if infoType == "11" :
 				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "subType": "1", "LevelActions": "|||", "LevelNames": "Off|On|Stop", "LevelOffHidden": "False", "SelectorStyle": "0"}
-				stype=18		
+				stype=18
+			if infoType == "15":
+				Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol), "frequency":"868950"}
+				stype=0
+			
 			IsCreated=False
 			x=0
 			nbrdevices=1
@@ -241,6 +261,7 @@ class BasePlugin:
 	# present de base action executer qd une commande est passé a Domoticz
 	def onCommand(self, Unit, Command, Level, Hue):
 		SendtoRfplayer(Unit, Command, Level, Hue)
+
 		return True
 
 	def onHeartbeat(self):
@@ -258,7 +279,7 @@ class BasePlugin:
 		#OK ==>  protocol = 3
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-66", "floorNoise": "-106", "rfQuality": "10", "protocol": "3", "protocolMeaning": "BLYSS", "infoType": "2", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "256292321", "qualifier": "0"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-84", "floorNoise": "-106", "rfQuality": "5", "protocol": "2", "protocolMeaning": "VISONIC", "infoType": "2", "frequency": "868950"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "2039708784", "qualifier": "0", "qualifierMeaning": { "flags": []}}}}'
-		###########
+	###########
 		#infotype3 RTS Subtype0 ==> ok  // 
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-64", "floorNoise": "-103", "rfQuality": "9", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "14813191", "qualifier": "4", "qualifierMeaning": { "flags": ["My"]}}}}'
 	###########
@@ -279,7 +300,6 @@ class BasePlugin:
 		#infotype9
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-91", "floorNoise": "-107", "rfQuality": "4", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "9378633", "qualifier": "7", "qualifierMeaning": { "flags": ["Up/On"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "0", "rfLevel": "-98", "floorNoise": "-107", "rfQuality": "2", "protocol": "9", "protocolMeaning": "RTS", "infoType": "3", "frequency": "433920"},"infos": {"subType": "0", "subTypeMeaning": "Shutter", "id": "1310793", "qualifier": "1", "qualifierMeaning": { "flags": ["Down/Off"]}}}}'
-
 	###########
 		#infotype10
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-74", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "1608089600", "area": "0", "qualifier": "36", "qualifierMeaning": { "flags": ["LowBatt"]}, "function": "12", "functionMeaning": "REGULATION", "state": "0", "stateMeaning": "OFF"}}}'
@@ -293,14 +313,17 @@ class BasePlugin:
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-75", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "1608089600", "area": "0", "qualifier": "36", "qualifierMeaning": { "flags": ["LowBatt"]}, "function": "12", "functionMeaning": "REGULATION", "state": "0", "stateMeaning": "OFF"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-76", "floorNoise": "-108", "rfQuality": "8", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "GENERIC", "id": "3755245568", "area": "0", "qualifier": "32", "qualifierMeaning": { "flags": []}, "function": "2", "functionMeaning": "OPERATING MODE", "state": "7", "stateMeaning": "AUTO"}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-93", "floorNoise": "-108", "rfQuality": "3", "protocol": "8", "protocolMeaning": "X2D", "infoType": "10", "frequency": "868350"},"infos": {"subType": "8", "subTypeMeaning": "REC BIDIR", "id": "3962161153", "area": "1", "qualifier": "32", "qualifierMeaning": { "flags": []}, "function": "2", "functionMeaning": "OPERATING MODE", "state": "7", "stateMeaning": "AUTO"}}}'
-
 	###########
 		#infotype11 ==> ok
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-75", "floorNoise": "-99", "rfQuality": "6", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "2888689920", "qualifier": "10", "qualifierMeaning": { "flags": ["Alarm","Supervisor/Alive"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-57", "floorNoise": "-106", "rfQuality": "10", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1112729857", "qualifier": "2", "qualifierMeaning": { "flags": ["Alarm"]}}}}'
 		#ReqRcv='ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-57", "floorNoise": "-106", "rfQuality": "10", "protocol": "8", "protocolMeaning": "X2D", "infoType": "11", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "Detector/Sensor", "id": "1112729857", "qualifier": "0", "qualifierMeaning": { "flags": []}}}}'
-		###########
-		
+	###########
+       
+	###########
+		#infotype15 ==> ok
+		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-79", "rfQuality": "2", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "3", "subTypeMeaning": "TOGGLE", "id": "3765014356", "qualifier": "1", "info": "6913", "infoMeaning": "EMITRBTN, 2.7V", "add0": "0", "add1": "0"}}}'
+	###########		
 		
 		#ReadData(ReqRcv)
 		global SerialConn
@@ -376,6 +399,17 @@ def RFpConf():
 	if Parameters["Mode1"] != "" :
 		lineinput='ZIA++SETMAC ' + Parameters["Mode1"]
 		SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+
+	if Parameters["Mode3"] == "0" :
+            lineinput='ZIA++JAMMING ' + "0"
+            SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+            Domoticz.Debug("JAMALERT DISABLE")
+
+	if Parameters["Mode3"] != "0" :
+            lineinput='ZIA++JAMMING ' + Parameters["Mode3"]
+            SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+            Domoticz.Debug("JAMALERT is Enable with level = " + Parameters["Mode3"])
+
 	return
 
 def ReadConf(ReqRcv):
@@ -395,6 +429,7 @@ def ReadData(ReqRcv):
 	try:
 		DecData = json.loads(ReqRcv)
 		infoType = DecData['frame']['header']['infoType']
+		protocol = DecData['frame']['header']['protocol']
 		Domoticz.Debug("infoType : " + infoType)
 		##############################################################################################################
 		#####################################Frame infoType 0					ON/OFF
@@ -404,8 +439,13 @@ def ReadData(ReqRcv):
 		##############################################################################################################
 		#####################################Frame infoType 1					ON/OFF   error in API receive id instead of id_lsb and id_msb
 		##############################################################################################################
-		if infoType == "1":
+		if infoType == "1" and protocol != "15":
 			DecodeInfoType1(DecData, infoType)
+		##############################################################################################################
+		#####################################Frame infoType 1					ON/OFF   JAMALERT
+		##############################################################################################################
+		if infoType == "1" and protocol == "15":
+			DecodeInfoType01(DecData, infoType)
 		##############################################################################################################
 		#####################################Frame infoType 2					Visonic###############################
 		#############http://www.el-sys.com.ua/wp-content/uploads/MCR-300_UART_DE3140U0.pdf ###########################
@@ -461,6 +501,13 @@ def ReadData(ReqRcv):
 		##############################################################################################################
 		if infoType == "11":
 			DecodeInfoType11(DecData, infoType)
+		##############################################################################################################
+		#####################################Frame infoType 15	EDISIO/DIO REMOTE ####################
+		##############################################################################################################
+		if infoType == "15":
+			DecodeInfoType15(DecData, infoType)
+
+
 	except:
 		Domoticz.Log("Error while reading JSON Infotype")
 		Domoticz.Debug("Debug : Error Decoding/Reading  " + ReqRcv)
@@ -601,6 +648,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 				
 	Domoticz.Debug("SendtoRfplayer - command : " + lineinput)
 	
+        
 def FreeUnit() :
 	FreeUnit=""
 	for x in range(1,256):
@@ -649,6 +697,51 @@ def DecodeInfoType0(DecData, infoType):
 			Devices[nbrdevices].Update(nValue =int(SubType),sValue = str(SubType))
 	except Exception as e:
 		Domoticz.Log("Error while decoding Infotype0 frame " + repr(e))
+		return
+
+def DecodeInfoType01(DecData, infoType):
+	try :
+		IsCreated=False
+		x=0
+		# New device will start at 1 or at last + 1
+		nbrdevices=0
+		protocol = DecData['frame']['header']['protocol']
+		SubType = DecData['frame']['infos']['subType']
+		ColorAlert=2
+		JamStatus=str("No Jamming Alert")
+		if int(SubType) == 0 :
+			ColorAlert = 1 ###green###
+			JamStatus=str("No Jamming")
+		if int(SubType) == 1 :
+			ColorAlert = 4	###red###
+			JamStatus=str("Jamming Alert")
+		id = DecData['frame']['infos']['id']
+		Domoticz.Debug("id : " + str(id))
+		
+		Options = {"infoType":infoType, "id": str(id), "protocol": str(protocol)}
+		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
+		#########check if devices exist ####################
+		for x in Devices:
+			#JJE - start
+			DOptions = Devices[x].Options
+	#				if Devices[x].Options == Options :
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Device already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+		########### create device if not find ###############
+		if IsCreated == False and Parameters["Mode4"] == "True" :
+			nbrdevices=FreeUnit()
+			Domoticz.Device(Name=protocol + " - " + "Jam'Alert", Unit=nbrdevices, Type=243, Subtype=22).Create()
+			Devices[nbrdevices].Update(nValue = int(ColorAlert), sValue = JamStatus, Options = Options)
+		elif IsCreated == True :
+		############ update device if found###################
+			Devices[nbrdevices].Update(nValue = int(ColorAlert), sValue = JamStatus)
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype01 JAMALERT frame " + repr(e))
 		return
 
 def DecodeInfoType1(DecData, infoType):
@@ -1261,12 +1354,12 @@ def DecodeInfoType8(DecData, infoType):
 		adr_channel = DecData['frame']['infos']['adr_channel']
 		qualifier = DecData['frame']['infos']['qualifier']
 		
-		Energy = DecData['frame']['infos']['measures'][0]['value']   #♣ watt/hour
-		Power = DecData['frame']['infos']['measures'][1]['value']  #♣ total watt with u=230v
+		Energy = DecData['frame']['infos']['measures'][0]['value']   #? watt/hour
+		Power = DecData['frame']['infos']['measures'][1]['value']  #? total watt with u=230v
 		try:
-			P1 = DecData['frame']['infos']['measures'][2]['value']   #♣ watt with u=230v
-			P2 = DecData['frame']['infos']['measures'][3]['value']   #♣ watt with u=230v
-			P3 = DecData['frame']['infos']['measures'][4]['value']   #♣ watt with u=230v
+			P1 = DecData['frame']['infos']['measures'][2]['value']   #? watt with u=230v
+			P2 = DecData['frame']['infos']['measures'][3]['value']   #? watt with u=230v
+			P3 = DecData['frame']['infos']['measures'][4]['value']   #? watt with u=230v
 		except:
 			P1 = ""
 			P2 = ""
@@ -1383,7 +1476,7 @@ def DecodeInfoType9(DecData, infoType):
 		except IndexError:
 			TotalRain = "0"
 		try :
-			CurrentRain = DecData['frame']['infos']['measures'][1]['value']
+			CurrentRain = float(DecData['frame']['infos']['measures'][1]['value'])*100
 		except IndexError:
 			CurrentRain = "0"
 		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
@@ -1576,4 +1669,44 @@ def DecodeInfoType11(DecData, infoType):
 	except Exception as e:
 		Domoticz.Log("Error while decoding Infotype11 frame " + repr(e))
 		return
-
+		
+		
+		
+def DecodeInfoType15(DecData, infoType):
+	try :
+		IsCreated=False
+		x=0
+		# New device will start at 1 or at last + 1
+		nbrdevices=0
+		protocol = DecData['frame']['header']['protocol']
+		SubType = DecData['frame']['infos']['subType']
+		Batt = float((DecData['frame']['infos']['infoMeaning'])[10:13])
+		Battery=int(float((Batt-2)*100))
+		######### "qualifier" is the pressed button number ####################
+		qualifier = DecData['frame']['infos']['qualifier']		
+		id = DecData['frame']['infos']['id'] + "_" + str(qualifier)
+		Domoticz.Debug("id : " + str(id) + " Button : " + str(qualifier) + " - " + str(Batt))
+		Options = {"infoType": infoType, "id": str(id), "protocol": str(protocol)}
+		Domoticz.Debug("Options to find or set : " + str(Options))
+		filters = ('id', 'protocol', 'infoType', 'function')
+		#########check if devices exist ####################
+		for x in Devices:
+			#JJE - start
+			DOptions = Devices[x].Options
+			if {k: DOptions.get(k, None) for k in filters} == {k: Options.get(k, None) for k in filters}:
+				#JJE - end
+				IsCreated = True
+				nbrdevices=x
+				Domoticz.Log("Device already exists. Unit=" + str(x))
+				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
+		########### create device if not find ###############
+		if IsCreated == False and Parameters["Mode4"] == "True" :
+			nbrdevices=FreeUnit()
+			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=244, Subtype=73, Switchtype=0).Create()
+			Devices[nbrdevices].Update(nValue = 0, sValue = str(1),BatteryLevel = Battery, Options = Options)
+		elif IsCreated == True :
+		############ update device if found###################
+			Devices[nbrdevices].Update(nValue = 0, sValue = str(1), BatteryLevel = Battery)
+	except Exception as e:
+		Domoticz.Log("Error while decoding Infotype15 frame " + repr(e))
+		return
