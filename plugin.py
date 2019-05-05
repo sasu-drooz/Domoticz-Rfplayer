@@ -70,6 +70,8 @@
 	</params>
 </plugin>
 """
+
+
 import Domoticz
 import datetime
 import json
@@ -322,7 +324,10 @@ class BasePlugin:
        
 	###########
 		#infotype15 ==> ok
+		#remote DIO 2.0
 		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-79", "rfQuality": "2", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "3", "subTypeMeaning": "TOGGLE", "id": "3765014356", "qualifier": "1", "info": "6913", "infoMeaning": "EMITRBTN, 2.7V", "add0": "0", "add1": "0"}}}'
+		#Relay DIO 2.0
+		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-104", "rfQuality": "6", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "33", "subTypeMeaning": "", "id": "3036778730", "qualifier": "1", "info": "8454", "infoMeaning": "-, 3.3V", "add0": "1", "add1": "0"}}}'
 	###########		
 		
 		#ReadData(ReqRcv)
@@ -391,6 +396,10 @@ def RFpConf():
 	lineinput='ZIA++RECEIVER - * + CHACON OREGONV2 OREGONV3/OWL X2D'
 	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	'''
+	#insert protocol after + 
+	lineinput='ZIA++REPEATER - * + '
+	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+	
 	lineinput='ZIA++RECEIVER + *'
 	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	#'''
@@ -502,7 +511,7 @@ def ReadData(ReqRcv):
 		if infoType == "11":
 			DecodeInfoType11(DecData, infoType)
 		##############################################################################################################
-		#####################################Frame infoType 15	EDISIO/DIO REMOTE ####################
+		#####################################Frame infoType 15	EDISIO/DIO REMOTE 2.0 and relay DIO 2.0 ##############
 		##############################################################################################################
 		if infoType == "15":
 			DecodeInfoType15(DecData, infoType)
@@ -560,6 +569,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if protocol =="9": protocol="RTS"
 	if protocol =="10": protocol="KD101"
 	if protocol =="11": protocol="PARROT"
+	if protocol =="16": protocol="EDISIO"
 
 	if infoType == "0" and  protocol == "PARROT":
 		id=Options['id']
@@ -645,7 +655,21 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id ) #+ " QUALIFIER " + qualifier)
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0, sValue = str(Level))
-				
+
+	if infoType == "15" :
+                qualifier = "0"
+                id=(Options['id'])[0:10]
+                if Command == "ON" :
+                        qualifier = "2"
+                elif Command == "OFF" :
+                        qualifier = "3"
+                Domoticz.Debug("INFOTYPE 15 " + "ID " + id + " QUALIFIER " + qualifier)
+                lineinput='ZIA++' + " " + str(Command.upper()) + " " + protocol + " " + "ID "+ id + " QUALIFIER " + qualifier
+                SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+                if Command == "On":Devices[Unit].Update(nValue =1,sValue = "on")
+                if Command == "Off":Devices[Unit].Update(nValue =0,sValue = "off")
+	
+                        
 	Domoticz.Debug("SendtoRfplayer - command : " + lineinput)
 	
         
@@ -1676,12 +1700,17 @@ def DecodeInfoType15(DecData, infoType):
 	try :
 		IsCreated=False
 		x=0
+		Batt=0
+		Battery=0
 		# New device will start at 1 or at last + 1
 		nbrdevices=0
 		protocol = DecData['frame']['header']['protocol']
 		SubType = DecData['frame']['infos']['subType']
-		Batt = float((DecData['frame']['infos']['infoMeaning'])[10:13])
-		Battery=int(float((Batt-2)*100))
+		if SubType == "3" :
+                    Batt = float((DecData['frame']['infos']['infoMeaning'])[10:13])
+                    Battery = int(float((Batt-2)*100))                
+		elif SubType != "3":
+                    Battery = 100
 		######### "qualifier" is the pressed button number ####################
 		qualifier = DecData['frame']['infos']['qualifier']		
 		id = DecData['frame']['infos']['id'] + "_" + str(qualifier)
