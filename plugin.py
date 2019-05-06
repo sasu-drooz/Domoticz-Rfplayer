@@ -657,14 +657,9 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 			Devices[Unit].Update(nValue =0, sValue = str(Level))
 
 	if infoType == "15" :
-                qualifier = "0"
                 id=(Options['id'])[0:10]
-                if Command == "ON" :
-                        qualifier = "2"
-                elif Command == "OFF" :
-                        qualifier = "3"
-                Domoticz.Debug("INFOTYPE 15 " + "ID " + id + " QUALIFIER " + qualifier)
-                lineinput='ZIA++' + " " + str(Command.upper()) + " " + protocol + " " + "ID "+ id + " QUALIFIER " + qualifier
+                Domoticz.Debug("INFOTYPE 15 " + "ID " + id + " COMMAND " +  + str(Command.upper()))
+                lineinput='ZIA++' + " " + str(Command.upper()) + " " + protocol + " " + "ID "+ id
                 SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
                 if Command == "On":Devices[Unit].Update(nValue =1,sValue = "on")
                 if Command == "Off":Devices[Unit].Update(nValue =0,sValue = "off")
