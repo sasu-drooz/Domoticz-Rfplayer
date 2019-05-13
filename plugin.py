@@ -70,6 +70,8 @@
 	</params>
 </plugin>
 """
+
+
 import Domoticz
 import datetime
 import json
@@ -322,7 +324,14 @@ class BasePlugin:
        
 	###########
 		#infotype15 ==> ok
+		#remote DIO 2.0
 		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-79", "rfQuality": "2", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "3", "subTypeMeaning": "TOGGLE", "id": "3765014356", "qualifier": "1", "info": "6913", "infoMeaning": "EMITRBTN, 2.7V", "add0": "0", "add1": "0"}}}'
+		#Relay DIO 2.0
+		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-80", "floorNoise": "-104", "rfQuality": "6", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "33", "subTypeMeaning": "", "id": "3036778730", "qualifier": "1", "info": "8454", "infoMeaning": "-, 3.3V", "add0": "1", "add1": "0"}}}'
+		#Dimmer ED-LI-07 trame de commande	
+		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-71", "floorNoise": "-101", "rfQuality": "7", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "33", "subTypeMeaning": "", "id": "771898205", "qualifier": "1", "info": "8450", "infoMeaning": "-, 3.3V", "add0": "5890", "add1": "0"}}}'
+		#Dimmer ED-LI-07 trame cyclique ???
+		#ReqRcv=' ZIA33{ "frame" :{"header": {"frameType": "0", "cluster": "0", "dataFlag": "1", "rfLevel": "-75", "floorNoise": "-103", "rfQuality": "7", "protocol": "16", "protocolMeaning": "EDISIO", "infoType": "15", "frequency": "868350"},"infos": {"subType": "0", "subTypeMeaning": "NULL", "id": "754940", "qualifier": "0", "info": "0", "infoMeaning": "-, 0.0V", "add0": "0", "add1": "0"}}}'
 	###########		
 		
 		#ReadData(ReqRcv)
@@ -391,6 +400,10 @@ def RFpConf():
 	lineinput='ZIA++RECEIVER - * + CHACON OREGONV2 OREGONV3/OWL X2D'
 	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	'''
+	#insert protocol after + 
+	lineinput='ZIA++REPEATER - * + '
+	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+	
 	lineinput='ZIA++RECEIVER + *'
 	SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 	#'''
@@ -502,7 +515,7 @@ def ReadData(ReqRcv):
 		if infoType == "11":
 			DecodeInfoType11(DecData, infoType)
 		##############################################################################################################
-		#####################################Frame infoType 15	EDISIO/DIO REMOTE ####################
+		#####################################Frame infoType 15	EDISIO/DIO REMOTE 2.0 and relay DIO 2.0 ##############
 		##############################################################################################################
 		if infoType == "15":
 			DecodeInfoType15(DecData, infoType)
@@ -560,6 +573,7 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 	if protocol =="9": protocol="RTS"
 	if protocol =="10": protocol="KD101"
 	if protocol =="11": protocol="PARROT"
+	if protocol =="16": protocol="EDISIO"
 
 	if infoType == "0" and  protocol == "PARROT":
 		id=Options['id']
@@ -645,7 +659,21 @@ def SendtoRfplayer(Unit, Command, Level, Hue):
 				lineinput='ZIA++' + str("ASSOC " + protocol + " ID " + id ) #+ " QUALIFIER " + qualifier)
 			SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
 			Devices[Unit].Update(nValue =0, sValue = str(Level))
-				
+
+	if infoType == "15" :
+                fin = (Options['id']).find('_') 
+                id=(Options['id'])[0:fin]
+                Domoticz.Debug("INFOTYPE 15 " + "ID " + id + " COMMAND " + str(Command) + " " + str(Level))
+                if Command != "Set Level" :                        
+                        lineinput='ZIA++' + " " + str(Command.upper()) + " " + protocol + " " + "ID "+ id
+                else :
+                        lineinput='ZIA++' + " DIM " + "%" + str(Level) + " " + protocol + " " + "ID "+ id
+                        
+                SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+                                
+                if Command == "On":Devices[Unit].Update(nValue =1,sValue = "on")
+                if Command == "Off":Devices[Unit].Update(nValue =0,sValue = "off")	
+                        
 	Domoticz.Debug("SendtoRfplayer - command : " + lineinput)
 	
         
@@ -1676,12 +1704,19 @@ def DecodeInfoType15(DecData, infoType):
 	try :
 		IsCreated=False
 		x=0
+		Batt=0
+		Battery=0
 		# New device will start at 1 or at last + 1
 		nbrdevices=0
 		protocol = DecData['frame']['header']['protocol']
 		SubType = DecData['frame']['infos']['subType']
-		Batt = float((DecData['frame']['infos']['infoMeaning'])[10:13])
-		Battery=int(float((Batt-2)*100))
+		Info = DecData['frame']['infos']['info']
+		Add0 = int(DecData['frame']['infos']['add0'])
+		if SubType == "3" :
+                    Batt = float((DecData['frame']['infos']['infoMeaning'])[10:13])
+                    Battery = int(float((Batt-2)*100))                
+		elif SubType != "3":
+                    Battery = 100
 		######### "qualifier" is the pressed button number ####################
 		qualifier = DecData['frame']['infos']['qualifier']		
 		id = DecData['frame']['infos']['id'] + "_" + str(qualifier)
@@ -1701,11 +1736,16 @@ def DecodeInfoType15(DecData, infoType):
 				Domoticz.Debug("Options found in DB: " + str(Devices[x].Options) + " for devices unit " + str(x))
 		########### create device if not find ###############
 		if IsCreated == False and Parameters["Mode4"] == "True" :
-			nbrdevices=FreeUnit()
-			Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=244, Subtype=73, Switchtype=0).Create()
-			Devices[nbrdevices].Update(nValue = 0, sValue = str(1),BatteryLevel = Battery, Options = Options)
+                        if  Add0 <= 1 : #Info != "8450" :
+                                nbrdevices=FreeUnit()
+                                Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=244, Subtype=73, Switchtype=0).Create()
+                                Devices[nbrdevices].Update(nValue = 0, sValue = str(1),BatteryLevel = Battery, Options = Options)
+                        else : #elif Info == "8450" :
+                                nbrdevices=FreeUnit()
+                                Domoticz.Device(Name=protocol + " - " + id, Unit=nbrdevices, Type=244, Subtype=73, Switchtype=7).Create()
+                                Devices[nbrdevices].Update(nValue = 0, sValue = str(1),BatteryLevel = Battery, Options = Options)
 		elif IsCreated == True :
-		############ update device if found###################
+                ############ update device if found###################
 			Devices[nbrdevices].Update(nValue = 0, sValue = str(1), BatteryLevel = Battery)
 	except Exception as e:
 		Domoticz.Log("Error while decoding Infotype15 frame " + repr(e))
