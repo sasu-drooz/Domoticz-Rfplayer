@@ -924,6 +924,10 @@ def DecodeInfoType4(DecData, infoType):
 		signal_level = int(DecData['frame']['header']['rfQuality'])
 		temphygro = temp + ';' + hygro + ';1'
 		Domoticz.Debug("id : " + id_PHY + " adr_channel : " + adr_channel)
+		# For this kind of messages, we update/create three different devices:
+		# - one with Temp only
+		# - one with Hygro only
+		# - one with Temp + Hygro
 		IsCreated=False
 		x=0
 		# New device will start at 1 or at last + 1
@@ -935,8 +939,8 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
+			if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+				if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
 						IsCreated = True
@@ -965,8 +969,8 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
+			if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+				if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
 						IsCreated = True
@@ -996,8 +1000,8 @@ def DecodeInfoType4(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
+			if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+				if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] and DOptions["sensorType"] == Options["sensorType"]:
 					if DOptions["id"] == Options["id"] and DOptions["adr_channel"] == Options["adr_channel"] :
 					#JJE - end
 						IsCreated = True
@@ -1317,8 +1321,8 @@ def DecodeInfoType8(DecData, infoType):
 			#JJE - start
 			DOptions = Devices[x].Options
 #				if Devices[x].Options == Options :
-			if  DOptions["protocol"] == Options["protocol"] :
-				if DOptions["infoType"] == Options["infoType"] :
+			if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+				if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] :
 					if DOptions["id"] == Options["id"] :
 					#JJE - end
 						IsCreated = True
@@ -1344,8 +1348,8 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
+				if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+					if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
 							IsCreated = True
@@ -1371,8 +1375,8 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
+				if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+					if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
 							IsCreated = True
@@ -1398,8 +1402,8 @@ def DecodeInfoType8(DecData, infoType):
 				#JJE - start
 				DOptions = Devices[x].Options
 	#				if Devices[x].Options == Options :
-				if  DOptions["protocol"] == Options["protocol"] :
-					if DOptions["infoType"] == Options["infoType"] :
+				if  'protocol' in DOptions and DOptions["protocol"] == Options["protocol"] :
+					if 'infoType' in DOptions and DOptions["infoType"] == Options["infoType"] :
 						if DOptions["id"] == Options["id"] :
 						#JJE - end
 							IsCreated = True
