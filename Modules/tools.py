@@ -145,7 +145,14 @@ def RFpConf(self):
     if self.MacAdress != "" :
         lineinput='ZIA++SETMAC ' + self.MacAdress
         self.SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
-    return
+    if self.JamAlert == "0" :
+            lineinput='ZIA++JAMMING ' + "0"
+            SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+            Domoticz.Debug("JAMALERT DISABLE")
+    if self.JamAlert != "0" :
+            lineinput='ZIA++JAMMING ' + Parameters["Mode3"]
+            SerialConn.Send(bytes(lineinput + '\n\r','utf-8'))
+            Domoticz.Debug("JAMALERT is Enable with level = " + Parameters["Mode3"])
 
 def ReadConf(self,Data):
     Data=Data.replace("ZIA--", "")

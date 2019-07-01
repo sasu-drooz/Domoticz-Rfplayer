@@ -11,6 +11,21 @@
     <params>
         <param field="SerialPort" label="Serial Port" width="150px" required="true" default=""/>
         <param field="Mode1" label="Mac Address" width="200px"/>
+        <param field="Mode3" label="Jamalert" width="75px">
+            <options>
+                <option label="Disable" value="0"/>
+                <option label="1" value="1"/>
+                <option label="2" value="2"/>
+                <option label="3" value="3"/>
+                <option label="4" value="4"/>
+                <option label="5" value="5"/>
+                <option label="6" value="6"/>
+                <option label="7" value="7" default="true"/>
+                <option label="8" value="8"/>
+                <option label="9" value="9"/>
+                <option label="10" value="10"/>
+            </options>
+        </param>
         <param field="Mode4" label="Enable Learning Mode" width="75px">
             <options>
                 <option label="Enable" value="True"/>
@@ -78,6 +93,7 @@ class BasePlugin:
         self.ReqRcv = ""
         self.isConnected = False
         self.LearningMode = Parameters["Mode4"]
+        self.JamAlert = Parameters["Mode3"]
         Domoticz.Log("Plugin is init.")
         return
 
